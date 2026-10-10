@@ -25,6 +25,7 @@ from layasdlc import (
     EngineRequest,
     FakeEngine,
     MalformedDecision,
+    MalformedResponse,
     OutOfScopeOption,
     Outcome,
     SCHEMA_VERSION,
@@ -232,20 +233,34 @@ def test_key_whitespace_is_normalised_before_the_scope_check():
     assert ranked(envelope) == [("bug_fix", 1.0)]
 
 
+@pytest.mark.xfail(
+    strict=True,
+    raises=MalformedResponse,
+    reason="superseded by tests/test_probability_integrity.py: the silent-drop "
+           "contract was replaced by refusing the whole distribution. Retained "
+           "verbatim as the record of the behaviour that was removed, and kept "
+           "strict so that reintroducing the drop fails the suite instead of "
+           "quietly returning.",
+)
 def test_engine_side_normalisation_drops_what_it_cannot_parse_before_validation():
     """Pinning the boundary between *normalisation* and *enforcement*.
 
-    ``ranked_probabilities`` -- shared by both real engines -- discards entries
-    it cannot parse (NaN, inf, bool, non-numeric) and passes the rest on, which
-    is the same treatment ``answer_confidence`` gives a bad confidence: absent,
-    not invented. Validation is what enforces the invariant on whatever reaches
-    it, as ``test_a_malformed_entry_does_not_get_dropped_from_an_otherwise_valid_map``
-    proves.
+    **Historical contract, retained unmodified as evidence.** ``ranked_probabilities``
+    -- shared by both real engines -- used to discard entries it could not parse
+    (NaN, inf, bool, non-numeric) and pass the rest on, which is the same
+    treatment ``answer_confidence`` gives a bad confidence: absent, not
+    invented. Validation enforced the invariant on whatever reached it.
 
-    Making the normaliser raise instead would raise from inside
-    ``engine.decide()``, where the controller classifies it as an engine/transport
-    failure rather than a rejection. That is a different change with a different
-    answer, so it is recorded here rather than smuggled into this one.
+    What that got wrong is the first assertion below: a distribution could
+    arrive incomplete and leave looking complete, because validation only ever
+    saw what survived. The parser now refuses such a response outright with
+    ``MalformedResponse`` instead of narrowing it, so this test is expected to
+    fail -- strictly, so that a reversion shows up as a failure rather than
+    quietly returning.
+
+    The replacement contract lives in ``tests/test_probability_integrity.py``.
+    The second half of this test still holds: out-of-range numbers survive the
+    parser and are rejected by validation, and is enforced there.
     """
     from layasdlc.engine import ranked_probabilities
 

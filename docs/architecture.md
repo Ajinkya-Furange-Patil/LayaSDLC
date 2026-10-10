@@ -75,6 +75,13 @@ These are the rules the tests exist to defend.
    with a typed reason. Caller mistakes (unknown decision type, option outside
    the canonical set) *do* raise, because silently accepting them would defeat
    the validator.
+8. **A distribution parses whole or not at all.** `ranked_probabilities()` refuses
+   a *present* `probabilities` field containing a boolean, a non-number, `NaN` or
+   `±Infinity` with `MalformedResponse`, rather than dropping the entry — a
+   distribution that arrives incomplete must not leave looking complete.
+   Absent fields and out-of-range numbers are deliberately not this layer's
+   errors: the first is "nothing reported", the second is representable and is
+   refused by validation.
 
 ---
 

@@ -28,6 +28,12 @@ A malformed distribution is **rejected, never repaired**. Dropping the bad
 entries and publishing the rest would present a hand-edited distribution as if
 the model had produced it, which is exactly the fabrication this project
 refuses to do.
+
+Enforcement happens at two layers on purpose. The engine parser refuses
+non-numeric/non-finite entries as :class:`~layasdlc.errors.MalformedResponse`
+(response data, before an answer exists); this module refuses everything that
+still reaches it, including out-of-range numbers that are representable but are
+not probabilities. Neither layer trusts the other.
 """
 
 from __future__ import annotations
@@ -145,10 +151,13 @@ def _build_alternatives(request: EngineRequest,
     ``null``, and an empty mapping. None of them is a distribution, and ``[]``
     would overstate what was reported.
 
-    Engines normalise through :func:`layasdlc.engine.ranked_probabilities`
-    first, which silently discards entries it cannot parse. Anything that
-    survives that and is *still* malformed is rejected here rather than
-    repaired -- see the module docstring.
+    The engines' own parser (:func:`layasdlc.engine.ranked_probabilities`)
+    refuses non-numeric and non-finite entries *before* an ``EngineAnswer``
+    exists, so anything arriving from a real engine is already numeric. This
+    layer enforces the same rule anyway rather than trusting that, because an
+    answer can be built directly -- by a different engine, or by a test -- and a
+    second check costs nothing next to what trusting a hand-built distribution
+    would cost.
     """
     if raw is None:
         return None

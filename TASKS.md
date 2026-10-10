@@ -150,6 +150,13 @@ Stage 7; feature 10's benchmark script is Stage 8.
       tie-break `(-probability, option)`, mirrored in `decision.ts` and guarded
       by the parity test. **Coverage:** 36 offline tests in
       `tests/test_alternatives.py` plus strengthened real-Laya assertions.
+      **Integrity follow-up:** the shared parser no longer drops entries it
+      cannot parse. A *present* `probabilities` field carrying a boolean,
+      non-number, `NaN` or `±Infinity` is refused as `MalformedResponse`
+      (malformed response data) instead of being narrowed, so a distribution
+      can no longer arrive incomplete and leave looking complete. Absent fields
+      and out-of-range numbers are unchanged. See
+      `tests/test_probability_integrity.py` (52 tests).
 
 **Acceptance:** ≥1 real bounded decision works through Laya ✅ (7 integration tests) · invalid decisions rejected safely ✅ · fallback tested ✅ · no paid inference ✅ · latency + usage recorded ✅ · alternatives returned ✅ (**2.10**)
 

@@ -17,7 +17,7 @@ from dataclasses import dataclass, field
 from typing import Any, Mapping, Optional, Protocol, Sequence, runtime_checkable
 
 from .contracts import Usage
-from .errors import UnsupportedDecisionType
+from .errors import MalformedResponse, UnsupportedDecisionType
 
 
 @dataclass(frozen=True)
@@ -122,19 +122,73 @@ def answer_confidence(answer: Any) -> Optional[float]:
 
 
 def ranked_probabilities(answer: Any) -> list[tuple[str, float]]:
-    """``(option, probability)`` pairs for a choice answer, best first."""
+    """``(option, probability)`` pairs for a choice answer, best first.
+
+    A ``probabilities`` field that is *present* has to be usable in full: every
+    entry must be a finite number. Anything else is malformed **response** data
+    and is refused here with :class:`~layasdlc.errors.MalformedResponse` --
+    which is already the taxonomy this module's engines use for a 2xx body that
+    is not the documented payload, and which ``DecisionEngine.decide`` already
+    documents as a legal raise.
+
+    This function used to skip entries it could not parse. That let a
+    distribution arrive incomplete and leave looking complete: validation only
+    ever saw what survived, so ``{"bug_fix": true, "feature": 0.4}`` became a
+    confident two-way ranking with ``bug_fix`` erased, and nothing downstream
+    could tell that a member had gone missing. Dropping is not an option and
+    neither is publishing the remainder, so the parse either succeeds whole or
+    fails loud.
+
+    Two things this deliberately does *not* treat as errors:
+
+    * **An absent or ``null`` field.** That is "no distribution reported" --
+      honest, and distinct from a malformed one. It yields ``[]``, which the
+      validator turns into ``alternatives=None``.
+    * **Out-of-range numbers.** ``1.5`` is a representable JSON number that is
+      simply not a probability; that is the validator's call, not this
+      parser's, and it is rejected there.
+    """
     if not isinstance(answer, Mapping):
         return []
     probs = answer.get("probabilities")
-    if not isinstance(probs, Mapping):
+    if probs is None:
         return []
+    if not isinstance(probs, Mapping):
+        raise MalformedResponse(
+            f"'probabilities' must be an object or null, got {type(probs).__name__}"
+        )
     pairs: list[tuple[str, float]] = []
     for label, value in probs.items():
-        parsed = _as_float(value)
-        if parsed is not None:
-            pairs.append((str(label), parsed))
+        pairs.append((str(label), _finite_probability(value, label)))
     pairs.sort(key=lambda item: item[1], reverse=True)
     return pairs
+
+
+def _finite_probability(value: Any, option: Any) -> float:
+    """One reported probability, or :class:`MalformedResponse` if it is not one.
+
+    ``bool`` is excluded explicitly. JSON ``true`` is a well-formed boolean and
+    Python models it as ``int`` 1, so without that check a model answering
+    ``{"bug_fix": true}`` would be read as certainty instead of as the contract
+    violation it is.
+
+    Note this is stricter than :func:`answer_confidence`'s coercion, which is
+    deliberate: confidence is allowed to be *absent*, so a value it cannot read
+    degrades to ``None``. A distribution cannot -- a missing member changes what
+    the remaining members mean.
+    """
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise MalformedResponse(
+            f"probability for {option!r} must be a number, got {type(value).__name__}"
+        )
+    number = float(value)
+    if math.isnan(number) or math.isinf(number):
+        # JSON has no literal for these, so seeing one means something upstream
+        # produced a value off the real line -- not a probability.
+        raise MalformedResponse(
+            f"probability for {option!r} is not a finite number ({value!r})"
+        )
+    return number
 
 
 def require_supported(decision_type: str, supported: Sequence[str]) -> None:

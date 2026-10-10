@@ -187,19 +187,32 @@ Stage 7; feature 10's benchmark script is Stage 8.
 
 **Acceptance:** task survives restart ✅ · resumes from last valid state ✅ · repeated requests do not duplicate completed steps ✅ · migrations and persistence tests pass ✅ · stale evidence not current ✅
 
-## Stage 5 — Connect LayaSDLC to OpenCode ⬜
+## Stage 5 — Connect LayaSDLC to OpenCode ✅
 
-- [ ] **5.1** **Before coding:** inspect installed OpenCode version + official docs; verify plugin hooks, tool interfaces, permissions, model invocation
-- [ ] **5.2** Smallest supported integration (custom tool or plugin)
-- [ ] **5.3** Accept a task → create persistent task record
-- [ ] **5.4** Send compact structured task state to the controller
-- [ ] **5.5** Return next permitted action + concise explanation
-- [ ] **5.6** Controller can request inspection, context retrieval, implementation, tests or escalation
-- [ ] **5.7** Coding-model invocation behind a replaceable adapter
-- [ ] **5.8** Use supported OpenCode interfaces — no scraping terminal output, no undocumented internals
-- [ ] **5.9** Least-privilege tool permissions; confirmation before repository-changing operations
-- [ ] **5.10** Log workflow transitions and actual model usage
-- [ ] **5.11** Safe cancel + progress inspection
+- [x] **5.1** **Before coding:** inspect installed OpenCode version + official docs; verify plugin hooks, tool interfaces, permissions, model invocation
+      — *Done means:* OpenCode v2.0.26 confirmed; `@opencode-ai/plugin` custom-tool API and `permission` config verified from official docs.
+- [x] **5.2** Smallest supported integration (custom tool or plugin)
+      — *Done means:* three custom tools (`layasdlc_route`, `layasdlc_inspect`, `layasdlc_approve`) in `.opencode/tools/layasdlc.ts`, plus an event-logging plugin.
+- [x] **5.3** Accept a task → create persistent task record
+      — *Done means:* `route` creates a `WorkflowTask` and saves it to the SQLite store before routing.
+- [x] **5.4** Send compact structured task state to the controller
+      — *Done means:* router sends `TaskState.as_prompt_state()` (task_id, subject, body, path, context) — no conversation history.
+- [x] **5.5** Return next permitted action + concise explanation
+      — *Done means:* `route` returns `next_action`, `reason`, `rules[]`, `confidence`, `error` when applicable.
+- [x] **5.6** Controller can request inspection, context retrieval, implementation, tests or escalation
+      — *Done means:* the router's eight bounded actions cover all five; the bridge returns whichever is next.
+- [x] **5.7** Coding-model invocation behind a replaceable adapter
+      — *Done means:* `LAYA_ENGINE` env var switches between `deterministic` (default, offline) and `laya` (live endpoint); router falls back deterministically.
+- [x] **5.8** Use supported OpenCode interfaces — no scraping terminal output, no undocumented internals
+      — *Done means:* tools use `tool()` helper from `@opencode-ai/plugin`; file-based bridge avoids shell injection.
+- [x] **5.9** Least-privilege tool permissions; confirmation before repository-changing operations
+      — *Done means:* `opencode.json` sets `route: ask`, `inspect: allow`, `approve: ask`. The router never executes anything.
+- [x] **5.10** Log workflow transitions and actual model usage
+      — *Done means:* Python `get_logger` for router/controller; OpenCode `client.app.log` for tool events.
+- [x] **5.11** Safe cancel + progress inspection
+      — *Done means:* `inspect` shows full state; `deny` escalates a pending approval, ending the task safely.
+
+**Acceptance:** one end-to-end workflow initiated from OpenCode (mock coding adapter allowed): creates a task, obtains a decision, returns a valid action, records the result, displays current state.
 
 **Acceptance:** one end-to-end workflow initiated from OpenCode (mock coding adapter allowed): creates a task, obtains a decision, returns a valid action, records the result, displays current state.
 

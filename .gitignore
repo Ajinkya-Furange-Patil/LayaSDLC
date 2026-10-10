@@ -22,6 +22,7 @@ onnx/
 .laya-cache/
 
 # Local runtime state
+.layasdlc.sqlite3
 *.sqlite
 *.sqlite3
 *.db

@@ -1,0 +1,11 @@
+{
+  "name": "layasdlc-opencode",
+  "version": "0.1.0",
+  "private": true,
+  "description": "LayaSDLC workflow router integration for OpenCode",
+  "type": "module",
+  "dependencies": {
+    "@opencode-ai/plugin": "latest",
+    "zod": "^3.22.0"
+  }
+}

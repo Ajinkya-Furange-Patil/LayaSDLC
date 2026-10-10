@@ -27,6 +27,37 @@ one thing: **never claim something is verified when it is only planned.**
 
 ---
 
+## Working a milestone (Stage 0)
+
+The full rule set lives in [`Stages/stage0.md`](Stages/stage0.md). Two of its
+rules govern how work is scheduled, so they apply to every contribution:
+
+* **Work only on the explicitly requested milestone.** Do not start Stage 4
+  because Stage 3 is nearly done; wait for the prompt.
+* **Never implement the entire platform in one pass**, and never silently change
+  the architecture or skip tests to make a milestone appear complete.
+
+Every milestone runs this workflow, and a PR should make each step visible:
+
+| Step | Action | Evidence in the PR |
+|---|---|---|
+| **A** | Inspect relevant files and documentation | links to what you read |
+| **B** | State the implementation plan briefly | the PR description |
+| **C** | Implement the smallest complete increment | a diff that does one thing |
+| **D** | Run focused tests, type checks and linting | command output |
+| **E** | Inspect the diff; confirm unrelated files were not changed | `git diff --stat` |
+| **F** | Report changed files, commands, actual results, limitations, next milestone | the PR summary |
+
+Two Stage 0 rules are especially easy to violate by accident:
+
+* **If a required API or capability cannot be verified, stop that integration
+  and explain the blocker.** Do not substitute a plausible-looking fake.
+* **Never invent Laya APIs, capabilities, configuration options or model
+  outputs.** If Laya cannot produce something (a rationale, a metric), return
+  `null`/`None` and say so.
+
+---
+
 ## Development setup
 
 ```bash

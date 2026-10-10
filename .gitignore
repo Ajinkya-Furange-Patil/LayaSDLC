@@ -1,0 +1,49 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Laya / model artifacts (never commit weights)
+*.onnx
+*.onnx.data
+*.safetensors
+model/
+onnx/
+.laya-cache/
+
+# Local runtime state
+*.sqlite
+*.sqlite3
+*.db
+*.db-wal
+*.db-shm
+var/
+.env
+.env.*
+!.env.example
+
+# Node / TypeScript
+node_modules/
+dist/
+*.tsbuildinfo
+.npm/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/

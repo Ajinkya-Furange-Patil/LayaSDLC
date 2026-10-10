@@ -59,7 +59,7 @@ Stage 0 is not a one-shot milestone; it is how every milestone below is run.
 | **0** | Principal-engineer rules and workflow | 🟡 standing — in force for all |
 | **1** | Repository reconnaissance and project foundation | ✅ done · ⚠ open: [1.10](#stage-1--repository-reconnaissance-and-project-foundation-) |
 | **2** | Real, replaceable decision-engine adapter | ✅ done |
-| **3** | Workflow router (state machine + CLI demo) | ⬜ **next — awaiting prompt** |
+| **3** | Workflow router (state machine + CLI demo) | ✅ done |
 | **4** | Persistent engineering state and context reuse | ⬜ |
 | **5** | Connect LayaSDLC to OpenCode | ⬜ |
 | **6** | Code-aware context engineering | ⬜ |
@@ -160,18 +160,18 @@ Stage 7; feature 10's benchmark script is Stage 8.
 
 **Acceptance:** ≥1 real bounded decision works through Laya ✅ (7 integration tests) · invalid decisions rejected safely ✅ · fallback tested ✅ · no paid inference ✅ · latency + usage recorded ✅ · alternatives returned ✅ (**2.10**)
 
-## Stage 3 — Workflow router ⬜ (next; awaiting explicit prompt)
+## Stage 3 — Workflow router ✅
 
-- [ ] **3.1** Eight workflow actions: `INSPECT_REPOSITORY`, `RETRIEVE_CONTEXT`, `IMPLEMENT_CHANGE`, `RUN_TESTS`, `REVIEW_DIFF`, `ESCALATE`, `REQUEST_APPROVAL`, `COMPLETE`
-- [ ] **3.2** Task state machine: current state, allowed next states, action history, completion conditions
-- [ ] **3.3** Transition validator that rejects impossible transitions
+- [x] **3.1** Eight workflow actions: `INSPECT_REPOSITORY`, `RETRIEVE_CONTEXT`, `IMPLEMENT_CHANGE`, `RUN_TESTS`, `REVIEW_DIFF`, `ESCALATE`, `REQUEST_APPROVAL`, `COMPLETE`
+- [x] **3.2** Task state machine: current state, allowed next states, action history, completion conditions
+- [x] **3.3** Transition validator that rejects impossible transitions
       — *Done means:* a task cannot become `COMPLETE` merely because Laya selected it.
-- [ ] **3.4** Routing policy: simple deterministic tasks skip LLM calls; source changes retrieve context first; high-risk/ambiguous → inspect or escalate; failed tests → diagnose / bounded retry / escalate
-- [ ] **3.5** Repeated identical failures do not trigger infinite retries
-- [ ] **3.6** Deployment and destructive actions require approval
-- [ ] **3.7** Deterministic rules exclude invalid transitions and enforce mandatory checks
-- [ ] **3.8** Unit tests + CLI demonstration on **mock** tasks
-- [ ] **3.9** Log *why* each route was chosen and which rules constrained it
+- [x] **3.4** Routing policy: simple deterministic tasks skip LLM calls; source changes retrieve context first; high-risk/ambiguous → inspect or escalate; failed tests → diagnose / bounded retry / escalate
+- [x] **3.5** Repeated identical failures do not trigger infinite retries
+- [x] **3.6** Deployment and destructive actions require approval
+- [x] **3.7** Deterministic rules exclude invalid transitions and enforce mandatory checks
+- [x] **3.8** Unit tests + CLI demonstration on **mock** tasks
+- [x] **3.9** Log *why* each route was chosen and which rules constrained it
 
 **Acceptance:** demonstrate ≥5 scenarios — simple task, bug fix, failed test, ambiguous task, high-risk action · no real repository modifications executed.
 

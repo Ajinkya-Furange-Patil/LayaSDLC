@@ -320,6 +320,22 @@ class TaskState:
         return state
 
 
+def evidence_state(evidence: Optional[Evidence]) -> VerificationState:
+    """The state of a *single* piece of evidence.
+
+    ``tests_passed`` alone is never enough: an evidence record with no command
+    behind it reads as ``TESTS_FAILED``, not ``UNVERIFIED``, so "we think it
+    works" cannot reach a caller as a benign-looking status. Shared by
+    :class:`ControllerResult` and the Stage 3 workflow task so the two layers
+    cannot drift on what "verified" means.
+    """
+    if evidence is None:
+        return VerificationState.UNVERIFIED
+    if not evidence.tests_passed or not evidence.test_command.strip():
+        return VerificationState.TESTS_FAILED
+    return VerificationState.TESTS_PASSED
+
+
 @dataclass(frozen=True)
 class ControllerResult:
     """What the workflow controller returns: a decision plus how it was reached."""
@@ -353,11 +369,7 @@ class ControllerResult:
 
     @property
     def evidence_state(self) -> VerificationState:
-        if self.evidence is None:
-            return VerificationState.UNVERIFIED
-        if not self.evidence.tests_passed or not self.evidence.test_command.strip():
-            return VerificationState.TESTS_FAILED
-        return VerificationState.TESTS_PASSED
+        return evidence_state(self.evidence)
 
     def to_dict(self) -> dict[str, Any]:
         return {

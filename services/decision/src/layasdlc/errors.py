@@ -145,6 +145,49 @@ class EngineFailure(DecisionServiceError):
     status = "engine_error"
 
 
+# --- workflow routing (Stage 3) ---------------------------------------------------------
+
+
+class WorkflowError(DecisionServiceError):
+    """Base for the Stage 3 state machine's refusals.
+
+    These are *caller* mistakes rather than runtime conditions: asking to do
+    something the task's current phase does not permit, or asking to complete
+    work that is not finished. They raise rather than degrading, because
+    silently accepting either would defeat the very rules this layer exists to
+    enforce.
+    """
+
+    reason = "workflow"
+
+
+class InvalidTransition(WorkflowError):
+    """The requested action is not permitted from the task's current phase."""
+
+    reason = "invalid_transition"
+
+    def __init__(self, message: str, *, from_phase: str, action: str,
+                 permitted: Sequence[str] = ()):
+        super().__init__(message)
+        self.from_phase = from_phase
+        self.action = action
+        self.permitted = list(permitted)
+
+
+class IncompleteTask(WorkflowError):
+    """``COMPLETE`` was requested but the task's completion conditions are unmet.
+
+    This is the guard behind "a task cannot be marked complete merely because
+    Laya selected COMPLETE": the model's choice is never sufficient on its own.
+    """
+
+    reason = "incomplete"
+
+    def __init__(self, message: str, *, unmet: Sequence[str] = ()):
+        super().__init__(message)
+        self.unmet = list(unmet)
+
+
 # --- Stage 1 feature 7 / 8 --------------------------------------------------------------
 
 

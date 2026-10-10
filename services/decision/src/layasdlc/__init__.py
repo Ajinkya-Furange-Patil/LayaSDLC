@@ -64,13 +64,16 @@ from .errors import (
     EngineRejected,
     EngineTimeout,
     EngineUnavailable,
+    IncompleteTask,
     InvalidConfidence,
+    InvalidTransition,
     MalformedDecision,
     MalformedResponse,
     OutOfScopeOption,
     PermissionDenied,
-    UnsupportedDecisionType,
     UnverifiedClaimError,
+    UnsupportedDecisionType,
+    WorkflowError,
 )
 from .health import SERVICE_NAME, SERVICE_VERSION, health_check, is_healthy
 from .metrics import Measurement, Metrics, get_logger
@@ -79,6 +82,18 @@ from .policy import GateVerdict, PolicyConfig, evaluate_gate, guard_success_clai
 from .questions import INSTRUCTIONS, OPTION_DESCRIPTIONS, question_for
 from .safety import SafetyFinding, classify_safety
 from .validation import resolve_allowed_options, validate_answer, validate_envelope
+from .workflow import (
+    COMPLETION_RULES,
+    ActionRecord,
+    Approval,
+    RouteDecision,
+    TaskPhase,
+    WorkflowAction,
+    WorkflowTask,
+    new_task,
+    validate_transition,
+)
+from .router import WorkflowRouter
 
 __version__ = "0.1.0"
 
@@ -158,6 +173,20 @@ __all__ = [
     "EngineRejected",
     "EngineFailure",
     "MalformedResponse",
+    "WorkflowError",
+    "InvalidTransition",
+    "IncompleteTask",
     "UnverifiedClaimError",
     "ApprovalRequiredError",
+    # workflow state machine (Stage 3)
+    "WorkflowAction",
+    "TaskPhase",
+    "WorkflowTask",
+    "ActionRecord",
+    "Approval",
+    "RouteDecision",
+    "COMPLETION_RULES",
+    "WorkflowRouter",
+    "new_task",
+    "validate_transition",
 ]

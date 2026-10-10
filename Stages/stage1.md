@@ -32,7 +32,9 @@ Do not install every planned dependency yet. Choose only what is necessary for t
 ## Step 3: Create the foundation
 
 Create a small repository structure with:
-- README and setup instructions.
+- README and setup instructions — a dedicated `docs/setup.md` that reproduces
+  this environment from a clean machine (runtime versions, venv, dev
+  dependencies, TypeScript toolchain, env vars), not only a README quickstart.
 - Architecture decisions document.
 - Environment configuration example without secrets.
 - Typed task and decision contracts.

@@ -1,0 +1,45 @@
+# Project: LayaSDLC — Mini-Project MVP
+
+Act as a senior software engineer helping me build a research-oriented, token-efficient agentic software development controller.
+
+## Objective
+
+Integrate the open-source Laya decision model into an OpenCode-based development workflow. Laya should classify and route bounded engineering decisions, while coding models handle implementation and deterministic tools verify results.
+
+## Architecture
+
+- OpenCode: developer interface and coding-agent integration.
+- TypeScript: OpenCode plugin and integration layer.
+- Python: isolated Laya decision service.
+- SQLite: task states, decisions, measurements and execution history.
+- Git and test runners: repository inspection and verification.
+
+## Initial features
+
+1. Classify tasks into bug fix, feature, refactor, testing, documentation or investigation.
+2. Return a structured decision with the chosen action, available alternatives and confidence information supported by the installed Laya SDK.
+3. Implement configurable confidence thresholds and safe fallback rules.
+4. Keep execution separate from classification.
+5. Record every decision, model call, token count when available, latency and outcome.
+6. Provide a deterministic baseline router for comparison.
+7. Never claim that a patch works without test evidence.
+8. Require approval for destructive operations and deployment.
+9. Handle model failures, timeouts and malformed responses.
+10. Include unit tests and a reproducible benchmark script.
+
+## Development rules
+
+- First inspect the current environment and official Laya and OpenCode documentation.
+- Verify the actual Laya package API before writing integration code.
+- Do not invent SDK methods, model capabilities or token measurements.
+- Begin with a small end-to-end vertical slice.
+- Keep components modular and use typed interfaces.
+- Use mock decisions in tests so testing does not require a paid API.
+- Do not add a frontend until the backend workflow works.
+- Use version control and explain each implementation milestone.
+
+## First deliverable
+
+Produce the repository structure, architecture decisions, environment setup instructions, a working Laya decision-service prototype, deterministic fallback behavior and automated tests.
+
+Do not implement the complete platform in one pass. Build, test and verify each milestone before proceeding.

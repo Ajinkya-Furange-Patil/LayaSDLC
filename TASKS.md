@@ -1,8 +1,10 @@
 # LayaSDLC — Task Checklist
 
-> **Authoritative plan:** [`Stages/`](Stages/) — `stage0.md` … `stage8.md`.
-> This file tracks *execution* against that plan. Where they disagree, `Stages/`
-> wins and this file is wrong.
+> **Authoritative plan:** [`Stages/`](Stages/)
+> — [`overview.txt`](Stages/overview.txt) states the objective, architecture,
+> initial features and first deliverable; `stage0.md` … `stage8.md` are the
+> staged execution of it. This file tracks *execution* against that plan. Where
+> they disagree, `Stages/` wins and this file is wrong.
 >
 > An item is only ticked when its acceptance criteria are literally true **and**
 > the test suite is green. Every completed milestone is committed and pushed
@@ -55,8 +57,8 @@ Stage 0 is not a one-shot milestone; it is how every milestone below is run.
 | Stage | Title | Status |
 |---|---|---|
 | **0** | Principal-engineer rules and workflow | 🟡 standing — in force for all |
-| **1** | Repository reconnaissance and project foundation | ✅ done |
-| **2** | Real, replaceable decision-engine adapter | ✅ done |
+| **1** | Repository reconnaissance and project foundation | ✅ done · ⚠ open: [1.10](#stage-1--repository-reconnaissance-and-project-foundation-) |
+| **2** | Real, replaceable decision-engine adapter | ✅ done · ⚠ open: [2.10](#stage-2--real-replaceable-decision-engine-adapter-) |
 | **3** | Workflow router (state machine + CLI demo) | ⬜ **next — awaiting prompt** |
 | **4** | Persistent engineering state and context reuse | ⬜ |
 | **5** | Connect LayaSDLC to OpenCode | ⬜ |
@@ -78,6 +80,22 @@ project limits. Do not cite them as reasons to avoid later work.
 | Multi-agent orchestration | not scheduled in Stage 0–8 |
 | Local `laya` inference | blocked by hardware — see ADR-0001 |
 
+### Reconciliation with [`overview.txt`](Stages/overview.txt) — 2 open gaps
+
+Auditing the ten *Initial features* and the *First deliverable* in
+`overview.txt` against what actually exists surfaced two things that were
+claimed done but are not. Both are now written into the stage files that own
+them, and left **unticked** here.
+
+| # | overview.txt says | What exists | Owner |
+|---|---|---|---|
+| Feature 2 | *"Return a structured decision with the chosen action, **available alternatives** and confidence information"* | `Alternative` is defined in `contracts.py` and exported, but nothing constructs it. Every engine populates `EngineAnswer.probabilities`, and `validation.py` **drops** them when it builds the envelope — so the distribution Laya actually returns never reaches the caller. | Stage 2 → item **2.10** |
+| First deliverable | *"environment setup instructions"* | `docs/` contains `architecture.md` and two ADRs only. The README has a quickstart, but nothing reproduces the full environment (runtimes, venv, dev deps, TypeScript toolchain, env vars) from a clean machine. | Stage 1 → item **1.10** |
+
+Everything else in `overview.txt` maps cleanly: features 1, 3, 4, 6, 8, 9 are
+delivered by Stage 1/2; feature 5 persists in Stage 4; feature 7 completes in
+Stage 7; feature 10's benchmark script is Stage 8.
+
 ---
 
 ## Stage 1 — Repository reconnaissance and project foundation ✅
@@ -94,8 +112,14 @@ project limits. Do not cite them as reasons to avoid later work.
 - [x] **1.7** Health check for the decision service
 - [x] **1.8** Unit-test configuration, `.gitignore`, dependency manifests
 - [x] **1.9** README separates **verified capabilities** from **planned features**
+- [ ] **1.10** `docs/setup.md` — reproduce the environment from a clean machine
+      *(open gap: overview.txt "First deliverable" requires environment setup
+      instructions; the README quickstart covers running the tests but not the
+      full toolchain — runtimes, venv, dev dependencies, TypeScript setup, env
+      vars. Acceptance: someone unfamiliar with this machine can follow it and
+      reach a green suite.)*
 
-**Acceptance:** original files intact ✅ · setup matches environment ✅ · contracts importable ✅ · basic tests pass ✅ · engine swappable without rewriting controller ✅ · README verified/planned split ✅
+**Acceptance:** original files intact ✅ · setup matches environment ⚠ (**1.10**) · contracts importable ✅ · basic tests pass ✅ · engine swappable without rewriting controller ✅ · README verified/planned split ✅
 
 ## Stage 2 — Real, replaceable decision-engine adapter ✅
 
@@ -111,8 +135,17 @@ project limits. Do not cite them as reasons to avoid later work.
       - [x] 503 `"please retry"` was raised outside the retry loop → moved inside
       - [x] single-option questions always 503 → settled from policy, never padded
       - [x] watchdog/transport timeouts raced → watchdog is a backstop only
+- [ ] **2.10** Carry `available alternatives` (the probability distribution) onto
+      the `DecisionEnvelope`
+      *(open gap: overview.txt feature 2. Every engine already fills
+      `EngineAnswer.probabilities` and `validation.py` already has the ranked
+      list in hand — it is simply not copied onto the envelope, and
+      `contracts.Alternative` is defined and exported but never constructed.
+      Acceptance: a real Laya response reaches the caller as alternatives
+      ordered best-first; absent distributions stay `null` rather than `[]`;
+      parity test and TS mirror updated.)*
 
-**Acceptance:** ≥1 real bounded decision works through Laya ✅ (7 integration tests) · invalid decisions rejected safely ✅ · fallback tested ✅ · no paid inference ✅ · latency + usage recorded ✅
+**Acceptance:** ≥1 real bounded decision works through Laya ✅ (7 integration tests) · invalid decisions rejected safely ✅ · fallback tested ✅ · no paid inference ✅ · latency + usage recorded ✅ · alternatives returned ⚠ (**2.10**)
 
 ## Stage 3 — Workflow router ⬜ (next; awaiting explicit prompt)
 

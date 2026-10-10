@@ -14,6 +14,10 @@ Make the controller ask structured engineering questions and receive validated d
    - decision_type
    - allowed_options
    - selected_option
+   - available alternatives with their probabilities, when the engine reports them
+     (overview feature 2; Laya returns a full `probabilities` map for every choice,
+     so this *is* meaningfully supported and must reach the envelope rather than
+     being dropped during validation)
    - confidence, only if meaningfully supported
    - rationale or supporting fields, only if supported
    - model identifier and version

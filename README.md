@@ -127,10 +127,12 @@ print(result.source)    # "engine" | "fallback" | "policy"
 print(result.envelope.to_dict())
 ```
 
-`DecisionEnvelope` (`schema_version = "1.0"`) carries `decision_id`, `task_id`,
+`DecisionEnvelope` (`schema_version = "1.1"`) carries `decision_id`, `task_id`,
 `decision_type`, `allowed_options`, `selected_option`, `confidence` (only when
 meaningfully supported), `rationale` (`None` for Laya — it writes no text),
-`model` / `model_version`, `latency_ms` and `usage`.
+`model` / `model_version`, `latency_ms`, `usage`, and `alternatives` — the
+engine's probability distribution ranked best-first, or `null` when the engine
+reported none (never `[]`).
 
 ---
 

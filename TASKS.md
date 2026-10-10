@@ -58,7 +58,7 @@ Stage 0 is not a one-shot milestone; it is how every milestone below is run.
 |---|---|---|
 | **0** | Principal-engineer rules and workflow | 🟡 standing — in force for all |
 | **1** | Repository reconnaissance and project foundation | ✅ done · ⚠ open: [1.10](#stage-1--repository-reconnaissance-and-project-foundation-) |
-| **2** | Real, replaceable decision-engine adapter | ✅ done · ⚠ open: [2.10](#stage-2--real-replaceable-decision-engine-adapter-) |
+| **2** | Real, replaceable decision-engine adapter | ✅ done |
 | **3** | Workflow router (state machine + CLI demo) | ⬜ **next — awaiting prompt** |
 | **4** | Persistent engineering state and context reuse | ⬜ |
 | **5** | Connect LayaSDLC to OpenCode | ⬜ |
@@ -84,12 +84,13 @@ project limits. Do not cite them as reasons to avoid later work.
 
 Auditing the ten *Initial features* and the *First deliverable* in
 `overview.txt` against what actually exists surfaced two things that were
-claimed done but are not. Both are now written into the stage files that own
-them, and left **unticked** here.
+claimed done but are not. Both are written into the stage files that own them
+and were left **unticked** here until proven. Feature 2 has since been closed
+by item 2.10; the *First deliverable* remains open as item 1.10.
 
 | # | overview.txt says | What exists | Owner |
 |---|---|---|---|
-| Feature 2 | *"Return a structured decision with the chosen action, **available alternatives** and confidence information"* | `Alternative` is defined in `contracts.py` and exported, but nothing constructs it. Every engine populates `EngineAnswer.probabilities`, and `validation.py` **drops** them when it builds the envelope — so the distribution Laya actually returns never reaches the caller. | Stage 2 → item **2.10** |
+| Feature 2 | *"Return a structured decision with the chosen action, **available alternatives** and confidence information"* | **Resolved by 2.10.** Every engine populated `EngineAnswer.probabilities`, but `validate_answer()` built the `DecisionEnvelope` without reading them and `validate_envelope()` had no branch for the key, so the distribution Laya returns was discarded at the boundary. `Alternative` (already defined and exported) is now constructed from the validated distribution, ranked best-first. | Stage 2 → item **2.10** ✅ |
 | First deliverable | *"environment setup instructions"* | `docs/` contains `architecture.md` and two ADRs only. The README has a quickstart, but nothing reproduces the full environment (runtimes, venv, dev deps, TypeScript toolchain, env vars) from a clean machine. | Stage 1 → item **1.10** |
 
 Everything else in `overview.txt` maps cleanly: features 1, 3, 4, 6, 8, 9 are
@@ -135,17 +136,22 @@ Stage 7; feature 10's benchmark script is Stage 8.
       - [x] 503 `"please retry"` was raised outside the retry loop → moved inside
       - [x] single-option questions always 503 → settled from policy, never padded
       - [x] watchdog/transport timeouts raced → watchdog is a backstop only
-- [ ] **2.10** Carry `available alternatives` (the probability distribution) onto
+- [x] **2.10** Carry `available alternatives` (the probability distribution) onto
       the `DecisionEnvelope`
-      *(open gap: overview.txt feature 2. Every engine already fills
-      `EngineAnswer.probabilities` and `validation.py` already has the ranked
-      list in hand — it is simply not copied onto the envelope, and
-      `contracts.Alternative` is defined and exported but never constructed.
-      Acceptance: a real Laya response reaches the caller as alternatives
-      ordered best-first; absent distributions stay `null` rather than `[]`;
-      parity test and TS mirror updated.)*
+      — *Done means:* a real Laya response reaches the caller as `alternatives`
+      ordered best-first; absent distributions serialise as `null`, never `[]`;
+      malformed distributions are rejected rather than repaired; Python and
+      TypeScript agree. **Root cause:** `validate_answer()` did not read
+      `answer.probabilities` and `validate_envelope()` had no branch for the
+      key, so the distribution was dropped at the boundary while
+      `contracts.Alternative` sat unused. **Fix:** schema `1.0 → 1.1`
+      (additive), `DecisionEnvelope.alternatives: Optional[tuple[Alternative, …]]`
+      appended with default `None`, built in `validation.py` with deterministic
+      tie-break `(-probability, option)`, mirrored in `decision.ts` and guarded
+      by the parity test. **Coverage:** 36 offline tests in
+      `tests/test_alternatives.py` plus strengthened real-Laya assertions.
 
-**Acceptance:** ≥1 real bounded decision works through Laya ✅ (7 integration tests) · invalid decisions rejected safely ✅ · fallback tested ✅ · no paid inference ✅ · latency + usage recorded ✅ · alternatives returned ⚠ (**2.10**)
+**Acceptance:** ≥1 real bounded decision works through Laya ✅ (7 integration tests) · invalid decisions rejected safely ✅ · fallback tested ✅ · no paid inference ✅ · latency + usage recorded ✅ · alternatives returned ✅ (**2.10**)
 
 ## Stage 3 — Workflow router ⬜ (next; awaiting explicit prompt)
 

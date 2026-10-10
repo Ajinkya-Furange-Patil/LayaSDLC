@@ -23,8 +23,15 @@ def test_package_exports_its_documented_surface():
 
 
 def test_schema_version_is_declared_and_semver_shaped():
-    assert SCHEMA_VERSION == "1.0"
+    # Shape first: a version that stops looking like "major.minor" means the
+    # scheme itself changed, which is a bigger event than a field being added.
     assert SCHEMA_VERSION.count(".") == 1
+    major, minor = SCHEMA_VERSION.split(".")
+    assert major.isdigit() and minor.isdigit()
+    # 1.1 added DecisionEnvelope.alternatives (additive, nullable). Bumping this
+    # literal should be a deliberate act of noticing a schema change, so the
+    # value is pinned rather than inferred.
+    assert SCHEMA_VERSION == "1.1"
 
 
 def test_exactly_four_bounded_decision_types():

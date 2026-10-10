@@ -28,7 +28,15 @@ from typing import Any, Mapping, Optional, Sequence
 #: Version of the decision schema. Bump the minor for additive changes, the
 #: major when a field is removed or its meaning changes. Persisted with every
 #: envelope so an old record can still be read later.
-SCHEMA_VERSION = "1.0"
+#:
+#: History:
+#:
+#: * ``1.0`` -- initial schema.
+#: * ``1.1`` -- added ``alternatives`` (additive, nullable). ``stage2.md``
+#:   requirement 3 and ``overview.txt`` feature 2 both call for the ranked
+#:   alternatives, and every engine already produced the distribution; it was
+#:   simply dropped when the envelope was built.
+SCHEMA_VERSION = "1.1"
 
 
 # ======================================================================================
@@ -231,6 +239,12 @@ class DecisionEnvelope:
       Laya never generates text, so :class:`~layasdlc.engines.laya_http.LayaHttpEngine`
       always leaves this ``None`` rather than synthesising a sentence.
     * ``latency_ms`` / ``usage`` -- ``None`` when not measurable.
+    * ``alternatives`` -- the engine's probability distribution, ranked
+      best-first. ``None`` when the engine reported none: an empty list would
+      read as "the model considered nothing and ranked nothing", which is a
+      different claim from "no distribution was reported", so ``[]`` is never
+      emitted. Appended last and defaulting to ``None`` so the field is
+      strictly additive over schema 1.0.
     """
 
     schema_version: str
@@ -245,12 +259,20 @@ class DecisionEnvelope:
     model_version: Optional[str]
     latency_ms: Optional[float]
     usage: Optional[Usage]
+    #: Ranked best-first, ties broken by option name. ``None`` == not reported.
+    alternatives: Optional[tuple[Alternative, ...]] = None
 
     def to_dict(self) -> dict[str, Any]:
         payload = asdict(self)
         payload["allowed_options"] = list(self.allowed_options)
         if self.usage is not None:
             payload["usage"] = asdict(self.usage)
+        if self.alternatives is not None:
+            # ``asdict`` recurses into Alternative but keeps the tuple; listify
+            # it to match allowed_options, which is serialised as a JSON array.
+            # ``None`` is left alone so an unreported distribution reaches the
+            # wire as ``null`` rather than ``[]``.
+            payload["alternatives"] = list(payload["alternatives"])
         return payload
 
     @property

@@ -15,6 +15,19 @@ Rejection rules:
   ``[0, 1]``, NaN or wrong type  -> :class:`InvalidConfidence`
 * confidence absent              -> **accepted as ``None``** (requirement 3:
   confidence only when meaningfully supported; missing is not malformed)
+* probability distribution absent
+  or empty                       -> ``alternatives = None`` (never ``[]``)
+* malformed probability          -> :class:`MalformedDecision`
+  entries (wrong type, NaN,
+  non-finite, outside ``[0, 1]``,
+  non-string key)
+* probability for an option the
+  request did not offer          -> :class:`OutOfScopeOption`
+
+A malformed distribution is **rejected, never repaired**. Dropping the bad
+entries and publishing the rest would present a hand-edited distribution as if
+the model had produced it, which is exactly the fabrication this project
+refuses to do.
 """
 
 from __future__ import annotations
@@ -26,6 +39,7 @@ from typing import Any, Mapping, Optional, Sequence
 from .contracts import (
     DECISION_SPACE,
     SCHEMA_VERSION,
+    Alternative,
     DecisionEnvelope,
     DecisionType,
     Usage,
@@ -85,6 +99,141 @@ def resolve_allowed_options(decision_type: str,
             decision_type=decision_type,
         )
     return options
+
+
+def _probability(value: Any, option: str, decision_type: str) -> float:
+    """Coerce one reported probability, rejecting anything that is not a real one.
+
+    ``bool`` is excluded explicitly because in Python ``True`` is an ``int`` and
+    would otherwise be read as probability 1.0.
+    """
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise MalformedDecision(
+            f"probability for {option!r} must be a number, got {type(value).__name__}",
+            decision_type=decision_type,
+        )
+    number = float(value)
+    if math.isnan(number) or math.isinf(number):
+        raise MalformedDecision(
+            f"probability for {option!r} is not a finite number",
+            decision_type=decision_type,
+        )
+    if not 0.0 <= number <= 1.0:
+        raise MalformedDecision(
+            f"probability for {option!r} is outside [0, 1]: {number}",
+            decision_type=decision_type,
+        )
+    return number
+
+
+def _rank(alternatives: list[Alternative]) -> tuple[Alternative, ...]:
+    """Best-first with a tie-break that does not depend on the engine's key order.
+
+    ``(-probability, option)`` makes equal probabilities fall back to option
+    name, so two runs of the same response always produce the same envelope
+    instead of inheriting JSON object ordering.
+    """
+    alternatives.sort(key=lambda alt: (-alt.probability, alt.option))
+    return tuple(alternatives)
+
+
+def _build_alternatives(request: EngineRequest,
+                        raw: Any) -> Optional[tuple[Alternative, ...]]:
+    """The engine's probability distribution, ranked best-first, or ``None``.
+
+    ``None`` covers three distinct-but-equivalent cases: no field, an explicit
+    ``null``, and an empty mapping. None of them is a distribution, and ``[]``
+    would overstate what was reported.
+
+    Engines normalise through :func:`layasdlc.engine.ranked_probabilities`
+    first, which silently discards entries it cannot parse. Anything that
+    survives that and is *still* malformed is rejected here rather than
+    repaired -- see the module docstring.
+    """
+    if raw is None:
+        return None
+    if not isinstance(raw, Mapping):
+        raise MalformedDecision(
+            f"probabilities must be an object or null, got {type(raw).__name__}",
+            decision_type=request.decision_type,
+        )
+    if not raw:
+        return None
+
+    allowed = tuple(request.allowed_options)
+    built: list[Alternative] = []
+    for label, value in raw.items():
+        if not isinstance(label, str) or not label.strip():
+            raise MalformedDecision(
+                "probability keys must be non-empty strings",
+                decision_type=request.decision_type,
+            )
+        option = label.strip()
+        # A distribution over options the caller never offered is an answer to a
+        # different question, and would contradict the envelope's own
+        # allowed_options -- so it is refused, not filtered.
+        if option not in allowed:
+            raise OutOfScopeOption(
+                f"engine reported a probability for {option!r} which is not in "
+                f"allowed_options {list(allowed)}",
+                selected=option,
+                allowed=list(allowed),
+                decision_type=request.decision_type,
+            )
+        built.append(Alternative(
+            option=option,
+            probability=_probability(value, option, request.decision_type),
+        ))
+    return _rank(built)
+
+
+def _alternatives_from_payload(raw: Any, options: tuple[str, ...],
+                               decision_type: str) -> Optional[tuple[Alternative, ...]]:
+    """Rebuild alternatives from a serialised envelope that crossed a boundary."""
+    if raw is None or raw == []:
+        # An empty list carries the same information as null, and rejecting a
+        # correct decision over a serialisation detail would be pedantry. It is
+        # normalised rather than passed through, so ``[]`` never reaches a
+        # caller as a claim that nothing was ranked.
+        return None
+    if not isinstance(raw, (list, tuple)):
+        raise MalformedDecision("field 'alternatives' must be a list or null",
+                                decision_type=decision_type)
+
+    built: list[Alternative] = []
+    seen: set[str] = set()
+    for entry in raw:
+        if not isinstance(entry, Mapping):
+            raise MalformedDecision(
+                "each alternative must be an object with 'option' and 'probability'",
+                decision_type=decision_type,
+            )
+        if "option" not in entry or "probability" not in entry:
+            raise MalformedDecision(
+                "each alternative needs an 'option' and a 'probability'",
+                decision_type=decision_type,
+            )
+        raw_option = entry["option"]
+        if not isinstance(raw_option, str) or not raw_option.strip():
+            raise MalformedDecision("alternative 'option' must be a non-empty string",
+                                    decision_type=decision_type)
+        option = raw_option.strip()
+        if option in seen:
+            raise MalformedDecision(f"alternative {option!r} appears more than once",
+                                    decision_type=decision_type)
+        seen.add(option)
+        if option not in options:
+            raise OutOfScopeOption(
+                f"alternative {option!r} is not in allowed_options {list(options)}",
+                selected=option,
+                allowed=list(options),
+                decision_type=decision_type,
+            )
+        built.append(Alternative(
+            option=option,
+            probability=_probability(entry["probability"], option, decision_type),
+        ))
+    return _rank(built)
 
 
 def validate_answer(request: EngineRequest, answer: EngineAnswer) -> DecisionEnvelope:
@@ -147,6 +296,9 @@ def validate_answer(request: EngineRequest, answer: EngineAnswer) -> DecisionEnv
             decision_type=request.decision_type,
         )
 
+    # --- alternatives (the distribution the engine actually reported) -------------------
+    alternatives = _build_alternatives(request, answer.probabilities)
+
     return DecisionEnvelope(
         schema_version=SCHEMA_VERSION,
         decision_id=request.decision_id or uuid.uuid4().hex,
@@ -160,6 +312,7 @@ def validate_answer(request: EngineRequest, answer: EngineAnswer) -> DecisionEnv
         model_version=answer.model_version,
         latency_ms=answer.latency_ms,
         usage=answer.usage if isinstance(answer.usage, Usage) else None,
+        alternatives=alternatives,
     )
 
 
@@ -221,6 +374,9 @@ def validate_envelope(payload: Mapping[str, Any]) -> DecisionEnvelope:
             raise MalformedDecision("latency_ms must be a number or null")
         latency = float(latency)
 
+    alternatives = _alternatives_from_payload(payload.get("alternatives"), options,
+                                              payload["decision_type"])
+
     return DecisionEnvelope(
         schema_version=SCHEMA_VERSION,
         decision_id=payload["decision_id"],
@@ -234,4 +390,5 @@ def validate_envelope(payload: Mapping[str, Any]) -> DecisionEnvelope:
         model_version=payload.get("model_version"),
         latency_ms=latency,
         usage=usage,
+        alternatives=alternatives,
     )

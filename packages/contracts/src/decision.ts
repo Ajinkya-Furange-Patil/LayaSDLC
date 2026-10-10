@@ -11,7 +11,7 @@
  */
 
 /** Version of the decision schema. Must equal `contracts.SCHEMA_VERSION`. */
-export const SCHEMA_VERSION = "1.0";
+export const SCHEMA_VERSION = "1.1";
 
 // ---------------------------------------------------------------------------------------
 // Bounded decision types
@@ -118,7 +118,12 @@ export interface Usage {
   output_tokens: number | null;
 }
 
-/** One candidate option and its probability, best first. */
+/**
+ * One candidate option and its probability.
+ *
+ * Best-first ordering (ties broken by option name) is a property of the
+ * `alternatives` list on {@link DecisionEnvelope}, not of a single entry.
+ */
 export interface Alternative {
   option: string;
   probability: number;
@@ -141,6 +146,12 @@ export interface Evidence {
  *
  * Property order here must match `contracts.DecisionEnvelope` in Python — the
  * parity test compares both name and order.
+ *
+ * `alternatives` was appended for schema 1.1 and mirrors the Python field: a
+ * nullable, best-first ranking of the probability distribution the engine
+ * actually reported. It is `null`, never `[]`, when no distribution exists —
+ * an empty list would read as "the model considered nothing and ranked
+ * nothing", which is a different claim.
  */
 export interface DecisionEnvelope {
   schema_version: string;
@@ -155,6 +166,7 @@ export interface DecisionEnvelope {
   model_version: string | null;
   latency_ms: number | null;
   usage: Usage | null;
+  alternatives: readonly Alternative[] | null;
 }
 
 /** What the caller submitted. */
@@ -201,6 +213,7 @@ const ENVELOPE_FIELDS = [
   "model_version",
   "latency_ms",
   "usage",
+  "alternatives",
 ] as const satisfies readonly (keyof DecisionEnvelope)[];
 
 const RESULT_FIELDS = [
@@ -253,7 +266,40 @@ export function isDecisionEnvelope(value: unknown): value is DecisionEnvelope {
   if (typeof candidate["latency_ms"] !== "number" && candidate["latency_ms"] !== null) {
     return false;
   }
+  const alternatives = candidate["alternatives"];
+  if (alternatives !== null && !Array.isArray(alternatives)) return false;
+  if (Array.isArray(alternatives)) {
+    for (const entry of alternatives) {
+      if (!isAlternative(entry)) return false;
+    }
+    // Best-first with ties broken by option name, matching Python's sort key
+    // (-probability, option). An out-of-order list is rejected rather than
+    // quietly re-sorted, so a tampered payload fails fast instead of being
+    // repaired into something that looks authoritative.
+    for (let i = 1; i < alternatives.length; i += 1) {
+      const previous = alternatives[i - 1] as Alternative;
+      const current = alternatives[i] as Alternative;
+      if (
+        current.probability > previous.probability ||
+        (current.probability === previous.probability && current.option < previous.option)
+      ) {
+        return false;
+      }
+    }
+  }
   return true;
+}
+
+/** Structural check for one alternative. Shape only — it cannot attest that the number came from a model. */
+export function isAlternative(value: unknown): value is Alternative {
+  if (typeof value !== "object" || value === null) return false;
+  const candidate = value as Record<string, unknown>;
+  if (typeof candidate["option"] !== "string" || candidate["option"].trim() === "") {
+    return false;
+  }
+  const probability = candidate["probability"];
+  if (typeof probability !== "number" || !Number.isFinite(probability)) return false;
+  return probability >= 0 && probability <= 1;
 }
 
 /**

@@ -52,12 +52,15 @@ matching, it is deterministic, and it must never be influenced by a model.
 These are the rules the tests exist to defend.
 
 1. **Versioned envelope.** Every decision is a `DecisionEnvelope` with
-   `SCHEMA_VERSION` (`"1.0"`). No bare strings are returned to callers.
+   `SCHEMA_VERSION` (`"1.1"`). No bare strings are returned to callers.
 2. **Four bounded decision types.** `DECISION_SPACE` maps each type to a closed
    canonical option set; an option outside it is a programming error and raises.
 3. **Confidence only when meaningful.** `None` is a real value meaning "not
    measured"; it is never defaulted to `0` or to `1`. Absent token usage behaves
-   the same way.
+   the same way. `alternatives` follows the same rule: the engine's distribution
+   is passed through in best-first order with ties broken by option name, and an
+   engine that reported none gets `null` — never `[]`, which would claim the
+   model ranked nothing. A malformed distribution is rejected, never repaired.
 4. **Reject, do not coerce.** Malformed, unsupported and out-of-scope answers
    raise `DecisionRejected` subclasses and produce `Outcome.REJECTED`.
 5. **Deterministic fallback under the same threshold.** A fallback cannot launder

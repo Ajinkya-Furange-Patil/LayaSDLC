@@ -42,6 +42,7 @@ from layasdlc import (
     ToolPermissionPolicy,
     WorkflowController,
     question_for,
+    validate_envelope,
 )
 from layasdlc.engines.laya_http import LayaHttpEngine
 from layasdlc.engines.laya_sdk import LayaSdkEngine, laya_sdk_available
@@ -173,6 +174,32 @@ def test_real_bounded_decision_through_laya():
         assert 0.0 <= envelope.confidence <= 1.0
     # Laya does not generate text: a real answer must not invent a rationale.
     assert envelope.rationale is None
+
+    # --- the engine's actual distribution must reach the caller ----------------------
+    alternatives = envelope.alternatives
+    assert alternatives is not None, (
+        "Laya returns a probability distribution with every choice answer; "
+        "losing it here would mean requirement 3 never reaches the caller"
+    )
+    probabilities = [alt.probability for alt in alternatives]
+    assert probabilities == sorted(probabilities, reverse=True), \
+        "alternatives must arrive ranked best-first"
+    assert all(0.0 <= p <= 1.0 for p in probabilities)
+
+    offered = set(envelope.allowed_options)
+    ranked_options = [alt.option for alt in alternatives]
+    assert set(ranked_options) == offered, \
+        f"Laya ranks the criteria it was given; got {ranked_options} for {sorted(offered)}"
+    assert len(ranked_options) == len(set(ranked_options)), "duplicate alternatives"
+    assert envelope.selected_option in ranked_options, (
+        "the option Laya selected must appear in its own ranking"
+    )
+    assert sum(probabilities) == pytest.approx(1.0, abs=0.05), \
+        "a reported distribution must be a distribution, not an arbitrary set of numbers"
+
+    # ...and the same ranking must survive leaving the process as JSON.
+    restored = validate_envelope(json.loads(json.dumps(envelope.to_dict())))
+    assert restored.alternatives == alternatives
 
     # --- measured, not asserted ---------------------------------------------------------
     assert result.latency_ms > 0.0, "latency must be measured, not assumed"

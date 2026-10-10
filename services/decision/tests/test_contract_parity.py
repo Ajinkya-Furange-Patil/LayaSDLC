@@ -21,6 +21,7 @@ from layasdlc.contracts import (
     DECISION_SPACE,
     SCHEMA_VERSION,
     Action,
+    Alternative,
     ControllerResult,
     DecisionEnvelope,
     DecisionType,
@@ -85,6 +86,11 @@ def test_task_state_fields_match_in_name_and_order(ts_text):
 
 def test_evidence_fields_match_in_name_and_order(ts_text):
     assert py_interface_fields(Evidence) == ts_interface_fields(ts_text, "Evidence")
+
+
+def test_alternative_fields_match_in_name_and_order(ts_text):
+    """``Alternative`` is now reachable from the wire, so it needs the same mirror."""
+    assert py_interface_fields(Alternative) == ts_interface_fields(ts_text, "Alternative")
 
 
 def test_usage_serialisation_paths_agree():

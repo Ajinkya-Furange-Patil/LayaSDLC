@@ -1,0 +1,34 @@
+{
+  "name": "@layasdlc/contracts",
+  "version": "0.1.0",
+  "description": "TypeScript mirror of the LayaSDLC decision contract, for the OpenCode integration boundary.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "./dist/decision.js",
+  "types": "./dist/decision.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/decision.d.ts",
+      "import": "./dist/decision.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\""
+  },
+  "keywords": [
+    "laya",
+    "decision",
+    "opencode",
+    "agent",
+    "contracts"
+  ],
+  "devDependencies": {
+    "typescript": "^6.0.3"
+  }
+}

@@ -174,12 +174,16 @@ class Usage:
     def to_dict(self) -> dict[str, Any]:
         """JSON-ready form for logs and API responses.
 
+        The key set is deliberately identical to ``dataclasses.asdict(self)``,
+        because ``DecisionEnvelope.to_dict()`` serialises ``usage`` that way.
+        Two serialization paths that disagree would let the same object arrive
+        on the wire as two different shapes depending on the route it took.
+
         Absent counters serialise as ``null`` (a real "not measured"), never as
-        ``0`` (which would read as "cost nothing").
+        ``0`` (which would read as "cost nothing"). ``available`` remains a
+        derived property rather than a stored field, so it is not repeated here.
         """
-        return {"input_tokens": self.input_tokens,
-                "output_tokens": self.output_tokens,
-                "available": self.available}
+        return {"input_tokens": self.input_tokens, "output_tokens": self.output_tokens}
 
 
 @dataclass(frozen=True)
@@ -304,7 +308,7 @@ class ControllerResult:
     gate: Optional[GateState]
     threshold: Optional[float]
     engine: str
-    source: str                      # "engine" | "fallback" | "none"
+    source: str                      # "engine" | "fallback" | "policy"
     safety_class: SafetyClass
     requires_approval: bool
     approval_reason: Optional[str]

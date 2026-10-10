@@ -60,7 +60,7 @@ Stage 0 is not a one-shot milestone; it is how every milestone below is run.
 | **1** | Repository reconnaissance and project foundation | ✅ done · ⚠ open: [1.10](#stage-1--repository-reconnaissance-and-project-foundation-) |
 | **2** | Real, replaceable decision-engine adapter | ✅ done |
 | **3** | Workflow router (state machine + CLI demo) | ✅ done |
-| **4** | Persistent engineering state and context reuse | ⬜ |
+| **4** | Persistent engineering state and context reuse | ✅ done |
 | **5** | Connect LayaSDLC to OpenCode | ⬜ |
 | **6** | Code-aware context engineering | ⬜ |
 | **7** | Controlled execution and evidence-based verification | ⬜ |
@@ -175,17 +175,17 @@ Stage 7; feature 10's benchmark script is Stage 8.
 
 **Acceptance:** demonstrate ≥5 scenarios — simple task, bug fix, failed test, ambiguous task, high-risk action · no real repository modifications executed.
 
-## Stage 4 — Persistent engineering state and context reuse ⬜
+## Stage 4 — Persistent engineering state and context reuse ✅
 
-- [ ] **4.1** SQLite persistence (or a justified alternative), with migrations
-- [ ] **4.2** Persist task id/objective, workflow state, repo revision + working-tree status, decisions, completed steps, open questions, evidence refs, model calls/latency/usage, retry and failure history
-- [ ] **4.3** Store concise structured engineering facts, not conversation transcripts
-- [ ] **4.4** Distinguish verified facts / user requirements / model hypotheses / unresolved questions / execution results
-- [ ] **4.5** Invalidate stale context when relevant inputs change; stale evidence is not current
-- [ ] **4.6** Store no credentials or unnecessary sensitive data
-- [ ] **4.7** CLI command to inspect task state and its evidence
+- [x] **4.1** SQLite persistence (or a justified alternative), with migrations
+- [x] **4.2** Persist task id/objective, workflow state, repo revision + working-tree status, decisions, completed steps, open questions, evidence refs, model calls/latency/usage, retry and failure history
+- [x] **4.3** Store concise structured engineering facts, not conversation transcripts
+- [x] **4.4** Distinguish verified facts / user requirements / model hypotheses / unresolved questions / execution results
+- [x] **4.5** Invalidate stale context when relevant inputs change; stale evidence is not current
+- [x] **4.6** Store no credentials or unnecessary sensitive data
+- [x] **4.7** CLI command to inspect task state and its evidence
 
-**Acceptance:** task survives restart · resumes from last valid state · repeated requests do not duplicate completed steps · migrations and persistence tests pass.
+**Acceptance:** task survives restart ✅ · resumes from last valid state ✅ · repeated requests do not duplicate completed steps ✅ · migrations and persistence tests pass ✅ · stale evidence not current ✅
 
 ## Stage 5 — Connect LayaSDLC to OpenCode ⬜
 

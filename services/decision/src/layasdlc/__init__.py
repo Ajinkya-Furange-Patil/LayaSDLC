@@ -82,6 +82,7 @@ from .policy import GateVerdict, PolicyConfig, evaluate_gate, guard_success_clai
 from .questions import INSTRUCTIONS, OPTION_DESCRIPTIONS, question_for
 from .safety import SafetyFinding, classify_safety
 from .validation import resolve_allowed_options, validate_answer, validate_envelope
+from .store import STORE_SCHEMA_VERSION, StoreError, TaskStore
 from .workflow import (
     COMPLETION_RULES,
     ActionRecord,
@@ -100,7 +101,7 @@ __version__ = "0.1.0"
 __all__ = [
     "__version__",
     # contracts
-    "SCHEMA_VERSION",
+    "STORE_SCHEMA_VERSION",
     "DECISION_SPACE",
     "DecisionType",
     "DecisionEnvelope",

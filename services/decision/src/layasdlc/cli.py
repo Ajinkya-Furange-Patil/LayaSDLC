@@ -36,6 +36,7 @@ from .errors import DecisionServiceError
 from .permissions import ToolPermissionPolicy
 from .policy import PolicyConfig
 from .router import WorkflowRouter
+from .store import TaskStore
 from .workflow import TaskPhase, WorkflowAction, WorkflowTask, new_task
 
 #: Hard ceiling on how many steps a single invocation will take. Belt and braces
@@ -370,6 +371,63 @@ def _cmd_demo(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_inspect(args: argparse.Namespace) -> int:
+    """Show the persisted state of a task and its evidence (Stage 4 item 4.7)."""
+    store = TaskStore(args.store)
+    store.migrate()
+
+    if args.task_id:
+        task = store.load(args.task_id)
+        if task is None:
+            print(f"error: no task {args.task_id!r} in {args.store}", file=sys.stderr)
+            return 1
+        payload = {
+            "task": task.to_dict(),
+            "facts": store.facts(args.task_id, include_stale=True),
+        }
+        if args.json:
+            print(json.dumps(payload, indent=2))
+        else:
+            print(_headline(task))
+            print(f"  stored at  : {args.store}")
+            print(f"  revision   : {task.repo_revision or '(none)'}")
+            print(f"  tree       : {task.working_tree or '(none)'}")
+            print(f"  unmet      : {', '.join(task.unmet_conditions) or '(none)'}")
+            if task.approval:
+                verdict = "granted" if task.approval.granted else "denied"
+                print(f"  approval   : {verdict} by {task.approval.by}")
+            print()
+            print("  history:")
+            for record in task.history:
+                print(f"    {record.from_phase.value:20} --{record.action.value:20}--> "
+                      f"{record.to_phase.value:20} [{record.source}]")
+                if record.reason:
+                    print(f"      why: {record.reason}")
+            print()
+            print("  evidence:")
+            for item in task.evidence:
+                outcome = "passed" if item.tests_passed else "FAILED"
+                print(f"    {item.test_command!r} -> {outcome} at {item.checked_at}")
+            print()
+            facts = store.facts(args.task_id, include_stale=True)
+            if facts:
+                print("  context facts:")
+                for fact in facts:
+                    stale = " [stale]" if fact["stale"] else ""
+                    print(f"    ({fact['kind']}) {fact['content']}{stale}")
+        return 0
+
+    tasks = store.list_tasks()
+    if args.json:
+        print(json.dumps(tasks, indent=2))
+    else:
+        print(f"tasks in {args.store}:")
+        for row in tasks:
+            print(f"  {row['task_id']:20} {row['phase']:20} "
+                  f"retries={row['retries']} updated={row['updated_at']}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="layasdlc",
@@ -411,6 +469,15 @@ def build_parser() -> argparse.ArgumentParser:
                       choices=("deterministic", "laya"))
     demo.add_argument("--json", action="store_true")
     demo.set_defaults(func=_cmd_demo)
+
+    inspect = sub.add_parser("inspect",
+                              help="show persisted task state and its evidence")
+    inspect.add_argument("--store", default=".layasdlc.sqlite3",
+                         help="path to the SQLite store")
+    inspect.add_argument("--task-id", default=None,
+                         help="task to inspect; omit to list all")
+    inspect.add_argument("--json", action="store_true")
+    inspect.set_defaults(func=_cmd_inspect)
 
     return parser
 

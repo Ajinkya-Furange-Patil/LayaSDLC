@@ -379,6 +379,10 @@ class WorkflowTask:
     #: counters so routing can ask "is *this* failure one we have already seen?"
     #: without re-deriving it from history.
     last_signature: Optional[str] = None
+    #: Repository state when this task was last persisted. Facts recorded against
+    #: this revision are invalidated when it changes.
+    repo_revision: Optional[str] = None
+    working_tree: Optional[str] = None
 
     def __post_init__(self) -> None:
         if not self.task.task_id.strip():

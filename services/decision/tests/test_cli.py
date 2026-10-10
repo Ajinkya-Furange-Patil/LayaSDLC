@@ -229,3 +229,69 @@ def test_the_parser_requires_a_subcommand():
 def test_route_requires_a_subject():
     with pytest.raises(SystemExit):
         build_parser().parse_args(["route"])
+
+
+# ======================================================================================
+# inspect (Stage 4 item 4.7)
+# ======================================================================================
+
+
+def test_inspect_lists_all_tasks(tmp_path, capsys):
+    from layasdlc.cli import main
+    store = tmp_path / "test.sqlite3"
+
+    # Save two tasks via the store directly.
+    from layasdlc import TaskStore, new_task, TaskState
+    s = TaskStore(store)
+    s.migrate()
+    s.save(new_task(TaskState(task_id="T-A", subject="First")))
+    s.save(new_task(TaskState(task_id="T-B", subject="Second")))
+
+    assert main(["inspect", "--store", str(store)]) == 0
+    out = capsys.readouterr().out
+    assert "T-A" in out
+    assert "T-B" in out
+
+
+def test_inspect_shows_one_task(tmp_path, capsys):
+    from layasdlc.cli import main
+    from layasdlc import TaskStore, new_task, TaskState, WorkflowAction
+    from layasdlc.workflow import ActionRecord, TaskPhase
+    store = tmp_path / "test.sqlite3"
+    s = TaskStore(store)
+    s.migrate()
+    task = new_task(TaskState(task_id="T-1", subject="Deploy to production"))
+    task.history.append(ActionRecord(
+        action=WorkflowAction.REQUEST_APPROVAL,
+        from_phase=TaskPhase.CREATED, to_phase=TaskPhase.AWAITING_APPROVAL,
+        source="policy", reason="deployment requires approval"))
+    task.phase = TaskPhase.AWAITING_APPROVAL
+    s.save(task)
+
+    assert main(["inspect", "--store", str(store), "--task-id", "T-1"]) == 0
+    out = capsys.readouterr().out
+    assert "T-1" in out
+    assert "awaiting_approval" in out
+    assert "request_approval" in out
+    assert "approval required" in out or "deployment" in out
+
+
+def test_inspect_json_is_machine_readable(tmp_path, capsys):
+    from layasdlc.cli import main
+    from layasdlc import TaskStore, new_task, TaskState
+    store = tmp_path / "test.sqlite3"
+    s = TaskStore(store)
+    s.migrate()
+    s.save(new_task(TaskState(task_id="T-1", subject="Test")))
+
+    assert main(["inspect", "--store", str(store), "--task-id", "T-1", "--json"]) == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["task"]["task_id"] == "T-1"
+    assert payload["task"]["phase"] == "created"
+
+
+def test_inspect_reports_missing_task(tmp_path, capsys):
+    from layasdlc.cli import main
+    store = tmp_path / "empty.sqlite3"
+    assert main(["inspect", "--store", str(store), "--task-id", "T-404"]) == 1
+    assert "no task" in capsys.readouterr().err

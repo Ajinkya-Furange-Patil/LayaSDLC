@@ -82,6 +82,21 @@ from .policy import GateVerdict, PolicyConfig, evaluate_gate, guard_success_clai
 from .questions import INSTRUCTIONS, OPTION_DESCRIPTIONS, question_for
 from .safety import SafetyFinding, classify_safety
 from .validation import resolve_allowed_options, validate_answer, validate_envelope
+from .context import (
+    ContextItem,
+    ContextPackage,
+    ItemKind,
+    Source,
+    build_package,
+    deduplicate,
+    estimate_tokens,
+    from_filename_search,
+    from_git_diff,
+    from_symbol_search,
+    from_test_failures,
+    measure_tokens,
+    rank_items,
+)
 from .store import STORE_SCHEMA_VERSION, StoreError, TaskStore
 from .workflow import (
     COMPLETION_RULES,

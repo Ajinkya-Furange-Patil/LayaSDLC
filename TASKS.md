@@ -216,18 +216,24 @@ Stage 7; feature 10's benchmark script is Stage 8.
 
 **Acceptance:** one end-to-end workflow initiated from OpenCode (mock coding adapter allowed): creates a task, obtains a decision, returns a valid action, records the result, displays current state.
 
-## Stage 6 — Code-aware context engineering ⬜
+## Stage 6 — Code-aware context engineering ✅
 
-- [ ] **6.1** Start with git diffs, filename search, symbol search, test-failure retrieval
-- [ ] **6.2** AST extraction only where a suitable parser exists
-- [ ] **6.3** Identify relevant functions, classes, imports, call sites, direct dependencies
-- [ ] **6.4** Deterministic relevance ranking *before* any model-based ranking
-- [ ] **6.5** Compact context package: objective, snippets, paths + line ranges, dependencies, test results, constraints, open questions
-- [ ] **6.6** Configurable context budget with reserved space for the response
-- [ ] **6.7** Deduplicate snippets; never resend unchanged summaries
-- [ ] **6.8** Provenance for every fact (file, revision or test result)
-- [ ] **6.9** Never silently drop mandatory requirements or security-critical evidence to meet a budget
-- [ ] **6.10** Token accounting: measure with the target tokenizer when available, otherwise label estimates clearly
+- [x] **6.1** Start with git diffs, filename search, symbol search, test-failure retrieval
+- [x] **6.2** AST extraction only where a suitable parser exists
+      — *Done means:* Python's `ast` module for Python files; regex/line-based for others. No external parser dependency.
+- [x] **6.3** Identify relevant functions, classes, imports, call sites, direct dependencies
+- [x] **6.4** Deterministic relevance ranking *before* any model-based ranking
+      — *Done means:* path overlap, content Jaccard, kind priority, and test-failure proximity. No embeddings or vector DB.
+- [x] **6.5** Compact context package: objective, snippets, paths + line ranges, dependencies, test results, constraints, open questions
+- [x] **6.6** Configurable context budget with reserved space for the response
+- [x] **6.7** Deduplicate snippets; never resend unchanged summaries
+      — *Done means:* SHA-256 fingerprint deduplication; `unchanged` flag on items carried over from a previous package.
+- [x] **6.8** Provenance for every fact (file, revision or test result)
+- [x] **6.9** Never silently drop mandatory requirements or security-critical evidence to meet a budget
+      — *Done means:* constraints, open questions, and security items are always included regardless of budget pressure.
+- [x] **6.10** Token accounting: measure with the target tokenizer when available, otherwise label estimates clearly
+
+**Acceptance:** 513 offline tests pass (25 new context tests); targeted retrieval demonstrated; tests cover stale revisions, missing files, large files, budget exhaustion, deduplication, and provenance. No embeddings/vector DB.
 
 **Acceptance:** targeted retrieval reduces input size on suitable tasks while preserving needed context; tests cover stale git revisions, missing files, large files and budget exhaustion; full-file vs targeted comparison reported. No embeddings/vector DB unless the benchmark demands it.
 

@@ -1,0 +1,858 @@
+[
+  {
+    "id": "meta",
+    "name": "Meta AI",
+    "website": "https://ai.meta.com",
+    "topics": ["token-saving", "local-agents", "data-leak-prevention"],
+    "technologies": [
+      "Multi-Query Attention (MQA)",
+      "Grouped Query Attention (GQA)",
+      "KV Cache Quantization (8-bit/4-bit)",
+      "LLaMA 3.1 405B/70B/8B",
+      "LLaMA 3.2 1B/3B/11B/90B (Vision)",
+      "Llama Guard 3 (Safety)",
+      "Prompt Guard (Injection Defense)",
+      "Code Shield (Code Safety)",
+      "Llama Stack (Agent Framework)"
+    ],
+    "keyPapers": [
+      "LLaMA 3.1: Herd of Models (2024)",
+      "LLaMA 3.2: Revolutionizing Edge AI (2024)",
+      "Llama Guard: LLM-based Input-Output Safeguard (2023)",
+      "Scaling Laws for Neural Language Models (2022)"
+    ],
+    "benchmarks": {
+      "contextWindow": 128000,
+      "tokenSaving": "KV cache 8-bit quantization: 2x memory reduction",
+      "inferenceSpeed": "TensorRT-LLM: 2-4x throughput vs PyTorch",
+      "edgeModels": "1B/3B models run on mobile NPU"
+    },
+    "openSource": true,
+    "license": "Llama 3.1 Community License",
+    "github": "https://github.com/meta-llama",
+    "blog": "https://ai.meta.com/blog/",
+    "notes": "Strong focus on open models, edge deployment, and safety. Llama Stack provides standardized agent interfaces."
+  },
+  {
+    "id": "google",
+    "name": "Google DeepMind / Google AI",
+    "website": "https://deepmind.google",
+    "topics": ["token-saving", "context-handling", "local-agents"],
+    "technologies": [
+      "Gemini 1.5 Pro/Flash (1M/2M context)",
+      "Context Caching API (75% cost reduction)",
+      "Gemma 2 (2B/9B/27B) - Open SLMs",
+      "PaliGemma (Vision-Language)",
+      "Gemma Scope (Interpretability)",
+      "RecurrentGemma (Linear Attention)",
+      "Griffin (Hybrid RNN-Attention)",
+      "FlashAttention-2/3 Integration",
+      "Speculative Decoding (Medusa-style)",
+      "JAX/Flax Training Stack"
+    ],
+    "keyPapers": [
+      "Gemini 1.5: Unlocking Multimodal Understanding (2024)",
+      "Gemma 2: Improving Open Models (2024)",
+      "RecurrentGemma: Moving Beyond Transformers (2024)",
+      "Griffin: Mixing Gated Linear Recurrences with Attention (2024)",
+      "FlashAttention-3: Fast Attention on Hopper GPUs (2024)"
+    ],
+    "benchmarks": {
+      "contextWindow": 2000000,
+      "tokenSaving": "Context caching: 75% cost reduction on repeated context",
+      "inferenceSpeed": "TPU v5e: 2x perf/watt vs A100",
+      "edgeModels": "Gemma 2B runs on-device (mobile/web)"
+    },
+    "openSource": true,
+    "license": "Gemma License (Apache 2.0-like)",
+    "github": "https://github.com/google-deepmind",
+    "blog": "https://blog.google/technology/ai/",
+    "notes": "Gemini 1.5's 2M context + caching is industry-leading. Gemma 2 offers strong open SLMs with tool use."
+  },
+  {
+    "id": "anthropic",
+    "name": "Anthropic",
+    "website": "https://www.anthropic.com",
+    "topics": ["token-saving", "context-handling", "data-leak-prevention"],
+    "technologies": [
+      "Claude 3.5 Sonnet/Opus/Haiku",
+      "Prompt Caching (90% cost reduction)",
+      "Constitutional AI (Alignment)",
+      "Claude 3.5 Computer Use (Agent)",
+      "Citations API (Verifiable Outputs)",
+      "Batch Processing API (50% cost)",
+      "Message Batches (Async)"
+    ],
+    "keyPapers": [
+      "Constitutional AI: Harmlessness from AI Feedback (2022)",
+      "Claude 3 Model Card (2024)",
+      "Scaling Laws for Reward Model Overoptimization (2023)"
+    ],
+    "benchmarks": {
+      "contextWindow": 200000,
+      "tokenSaving": "Prompt caching: 90% cost reduction on cache hits",
+      "inferenceSpeed": "Haiku: ~120 tok/s, Sonnet: ~60 tok/s",
+      "costOptimization": "Batch API: 50% discount"
+    },
+    "openSource": false,
+    "license": "Proprietary API",
+    "github": "https://github.com/anthropics",
+    "blog": "https://www.anthropic.com/news",
+    "notes": "Best-in-class prompt caching for repeated context. Constitutional AI provides strong built-in safety."
+  },
+  {
+    "id": "microsoft",
+    "name": "Microsoft Research / Azure AI",
+    "website": "https://www.microsoft.com/en-us/research",
+    "topics": ["token-saving", "context-handling", "data-leak-prevention", "local-agents"],
+    "technologies": [
+      "Phi-3.5 (3.8B) - Mini, Vision, MoE",
+      "Phi-3.5 MoE (42B total, 6.6B active)",
+      "LongRoPE / YaRN (Extended Context)",
+      "OmniParser (Screen Understanding)",
+      "Presidio (PII Detection/Redaction)",
+      "Purview (Data Governance)",
+      "Entra ID (Identity/Access)",
+      "AutoGen (Multi-Agent Framework)",
+      "TypeChat (Structured Output)",
+      "Guidance (Constrained Generation)",
+      "ONNX Runtime / Olive (Optimization)",
+      "BitNet (1-bit Quantization)"
+    ],
+    "keyPapers": [
+      "Phi-3: Small Language Models with Big Capabilities (2024)",
+      "Phi-3.5: Advancing Small Language Models (2024)",
+      "LongRoPE: Extending LLM Context Window (2024)",
+      "BitNet: Scaling 1-bit Transformers (2024)",
+      "Presidio: PII Detection at Scale (2023)"
+    ],
+    "benchmarks": {
+      "contextWindow": 128000,
+      "tokenSaving": "Phi-3.5 MoE: 6.6B active params, 42B total",
+      "inferenceSpeed": "ONNX Runtime: 2-3x CPU speedup",
+      "edgeModels": "Phi-3.5 Mini runs on mobile/edge"
+    },
+    "openSource": true,
+    "license": "MIT / Apache 2.0",
+    "github": "https://github.com/microsoft",
+    "blog": "https://www.microsoft.com/en-us/research/blog/",
+    "notes": "Phi-3.5 MoE is breakthrough for efficient specialist agents. Presidio is production-grade PII detection."
+  },
+  {
+    "id": "nvidia",
+    "name": "NVIDIA",
+    "website": "https://www.nvidia.com/en-us/research/",
+    "topics": ["token-saving", "context-handling", "data-leak-prevention", "local-agents"],
+    "technologies": [
+      "Nemotron 3 Ultra (70B) / Nemotron-Mini (4B)",
+      "Nemotron 4 340B (Synthetic Data)",
+      "TensorRT-LLM (Inference Optimization)",
+      "FlashAttention-3 (Hopper Optimization)",
+      "KV Cache Compression (Quantization/Eviction)",
+      "Speculative Decoding (Medusa/Eagle)",
+      "NeMo Guardrails (Programmable Guardrails)",
+      "NeMo Retriever (RAG Pipeline)",
+      "NeMo Curator (Data Curation)",
+      "MLC-LLM (ML Compilation for Edge)",
+      "Chat with RTX (Local RAG Demo)",
+      "NV-Embed (Embedding Models)"
+    ],
+    "keyPapers": [
+      "Nemotron 3 Ultra: Agent-Optimized LLM (2024)",
+      "TensorRT-LLM: High-Throughput Inference (2023)",
+      "FlashAttention-3: Fast Attention on Hopper (2024)",
+      "NeMo Guardrails: Toolkit for Controllable LLM Apps (2023)",
+      "MLC-LLM: Universal LLM Deployment (2023)"
+    ],
+    "benchmarks": {
+      "contextWindow": 128000,
+      "tokenSaving": "KV cache INT4: 4x memory reduction, <1% perplexity loss",
+      "inferenceSpeed": "TensorRT-LLM: 8x throughput vs HF on H100",
+      "edgeModels": "Nemotron-Mini 4B on Jetson Orin"
+    },
+    "openSource": true,
+    "license": "Apache 2.0 / NVIDIA Open Source",
+    "github": "https://github.com/NVIDIA",
+    "blog": "https://developer.nvidia.com/blog/",
+    "notes": "Full stack: models, optimization, guardrails, RAG, edge deployment. TensorRT-LLM is production standard."
+  },
+  {
+    "id": "mistral",
+    "name": "Mistral AI",
+    "website": "https://mistral.ai",
+    "topics": ["token-saving", "context-handling", "local-agents"],
+    "technologies": [
+      "Mistral Large 2 / Nemo / Small",
+      "Mistral 7B / 8x7B / 8x22B (MoE)",
+      "Sliding Window Attention (SWA)",
+      "Grouped Query Attention (GQA)",
+      "Function Calling / Structured Output",
+      "Mistral.rs (Rust Inference Engine)",
+      "La Plateforme (API)",
+      "Codestral (Code Specialization)"
+    ],
+    "keyPapers": [
+      "Mistral 7B (2023)",
+      "Mixtral 8x7B: Sparse Mixture of Experts (2024)",
+      "Mistral Large 2 (2024)"
+    ],
+    "benchmarks": {
+      "contextWindow": 128000,
+      "tokenSaving": "SWA + GQA: 2x speedup, 50% KV cache reduction",
+      "inferenceSpeed": "Mistral.rs: 2-3x faster than llama.cpp on CPU",
+      "moeEfficiency": "8x22B: 39B active params / 141B total"
+    },
+    "openSource": true,
+    "license": "Apache 2.0 (7B, Nemo) / Custom (Large)",
+    "github": "https://github.com/mistralai",
+    "blog": "https://mistral.ai/news/",
+    "notes": "Sparse MoE architecture is highly efficient. Mistral.rs is fast Rust inference engine."
+  },
+  {
+    "id": "together-ai",
+    "name": "Together AI",
+    "website": "https://www.together.ai",
+    "topics": ["token-saving", "context-handling", "local-agents"],
+    "technologies": [
+      "Together Inference Engine",
+      "FlashAttention-3 Integration",
+      "KV Cache Compression (Quantization)",
+      "Speculative Decoding (Eagle/Medusa)",
+      "RedPajama (Open Data)",
+      "LLaMA-2/3 Hosting",
+      "Custom Model Fine-tuning",
+      "Together GPU Clusters"
+    ],
+    "keyPapers": [
+      "FlashAttention-3 (2024)",
+      "RedPajama: Open Dataset for LLM Training (2023)",
+      "Speculative Decoding with Eagle (2024)"
+    ],
+    "benchmarks": {
+      "contextWindow": 128000,
+      "tokenSaving": "KV cache FP8: 2x memory, negligible quality loss",
+      "inferenceSpeed": "Together Engine: 2-4x vLLM on H100",
+      "costOptimization": "Serverless: pay per token"
+    },
+    "openSource": true,
+    "license": "Apache 2.0",
+    "github": "https://github.com/togethercomputer",
+    "blog": "https://www.together.ai/blog",
+    "notes": "Production-grade inference optimization. Strong open-source contributions (FlashAttention, RedPajama)."
+  },
+  {
+    "id": "zilliz",
+    "name": "Zilliz / Milvus",
+    "website": "https://zilliz.com",
+    "topics": ["token-saving", "context-handling"],
+    "technologies": [
+      "Milvus Vector Database",
+      "LLMLingua-2 (Prompt Compression)",
+      "LongLLMLingua (Long Context Compression)",
+      "Hybrid Search (Dense + Sparse)",
+      "GPU-Accelerated Indexing",
+      "Milvus Lite (Embedded)",
+      "Zilliz Cloud (Managed)"
+    ],
+    "keyPapers": [
+      "LLMLingua: Compressing Prompts for LLMs (2023)",
+      "LongLLMLingua: Long Context Compression (2024)",
+      "Milvus: Vector Database for AI (2023)"
+    ],
+    "benchmarks": {
+      "compressionRatio": "LLMLingua-2: 20x compression, <2% quality loss",
+      "latency": "Sub-10ms vector search at billion scale",
+      "throughput": "100K+ QPS on commodity hardware"
+    },
+    "openSource": true,
+    "license": "Apache 2.0 (Milvus) / MIT (LLMLingua)",
+    "github": "https://github.com/milvus-io",
+    "blog": "https://zilliz.com/blog",
+    "notes": "LLMLingua is SOTA for prompt compression. Milvus is leading open-source vector DB."
+  },
+  {
+    "id": "pinecone",
+    "name": "Pinecone",
+    "website": "https://www.pinecone.io",
+    "topics": ["context-handling"],
+    "technologies": [
+      "Pinecone Serverless",
+      "Hybrid Search (Dense + Sparse)",
+      "Reranking (Cohere/In-house)",
+      "Namespaces/Multi-tenancy",
+      "Integrated RAG Pipelines",
+      "Pinecone Assistant (RAG-in-a-box)"
+    ],
+    "keyPapers": [],
+    "benchmarks": {
+      "latency": "p50 < 20ms, p99 < 100ms",
+      "scale": "Billions of vectors, serverless scaling",
+      "cost": "Serverless: pay per request"
+    },
+    "openSource": false,
+    "license": "Proprietary SaaS",
+    "github": "https://github.com/pinecone-io",
+    "blog": "https://www.pinecone.io/learn/",
+    "notes": "Serverless vector DB removes ops burden. Pinecone Assistant simplifies RAG deployment."
+  },
+  {
+    "id": "weaviate",
+    "name": "Weaviate",
+    "website": "https://weaviate.io",
+    "topics": ["context-handling", "data-leak-prevention"],
+    "technologies": [
+      "Weaviate Vector Database",
+      "Graph RAG (Knowledge Graphs)",
+      "Hybrid Search (BM25 + Vector)",
+      "Generative Search (RAG)",
+      "Multi-tenancy & RBAC",
+      "PII Detection Module",
+      "Weaviate Embeddings (Open)",
+      "Verba (RAG Chat App)"
+    ],
+    "keyPapers": [
+      "Weaviate: Cloud-Native Vector Database (2023)",
+      "Graph RAG with Weaviate (2024)"
+    ],
+    "benchmarks": {
+      "scale": "Billions of objects",
+      "hybridSearch": "BM25 + Vector in single query",
+      "graphRag": "Multi-hop reasoning over knowledge graph"
+    },
+    "openSource": true,
+    "license": "BSD-3-Clause",
+    "github": "https://github.com/weaviate",
+    "blog": "https://weaviate.io/blog",
+    "notes": "Graph RAG + hybrid search + built-in PII detection. Verba is great open-source RAG demo."
+  },
+  {
+    "id": "langchain",
+    "name": "LangChain / LangGraph",
+    "website": "https://www.langchain.com",
+    "topics": ["context-handling", "local-agents", "data-leak-prevention"],
+    "technologies": [
+      "LangChain (Orchestration)",
+      "LangGraph (Stateful Multi-Agent)",
+      "LangSmith (Observability)",
+      "LangServe (Deployment)",
+      "Memory Modules (Conversation/Summary/Entity)",
+      "RAG Chains (RetrievalQA, ConversationalRetrieval)",
+      "Agent Executors (ReAct, Plan-and-Execute)",
+      "PII Guardrails (Presidio Integration)",
+      "Local LLM Integrations (Ollama, llama.cpp)"
+    ],
+    "keyPapers": [
+      "LangGraph: Building Stateful Multi-Agent Applications (2024)",
+      "LangChain: Composing LLM Applications (2023)"
+    ],
+    "benchmarks": {},
+    "openSource": true,
+    "license": "MIT / LangChain License",
+    "github": "https://github.com/langchain-ai",
+    "blog": "https://blog.langchain.dev",
+    "notes": "LangGraph is best-in-class for complex agent workflows. Strong local LLM support."
+  },
+  {
+    "id": "llamaindex",
+    "name": "LlamaIndex",
+    "website": "https://www.llamaindex.ai",
+    "topics": ["context-handling", "local-agents"],
+    "technologies": [
+      "LlamaIndex (Data Framework)",
+      "LlamaParse (Document Parsing)",
+      "LlamaCloud (Managed Service)",
+      "Property Graph Index",
+      "Knowledge Graph RAG",
+      "Agentic RAG (Query Planning)",
+      "Multi-Modal RAG",
+      "Local LLM Support (Ollama, llama.cpp)",
+      "Vector Store Integrations (50+)"
+    ],
+    "keyPapers": [
+      "LlamaIndex: Data Framework for LLM Applications (2023)",
+      "Property Graph Index for RAG (2024)"
+    ],
+    "benchmarks": {},
+    "openSource": true,
+    "license": "MIT",
+    "github": "https://github.com/run-llama",
+    "blog": "https://blog.llamaindex.ai",
+    "notes": "Best for complex document parsing and graph RAG. LlamaParse handles complex PDFs well."
+  },
+  {
+    "id": "cohere",
+    "name": "Cohere",
+    "website": "https://cohere.com",
+    "topics": ["context-handling", "data-leak-prevention", "local-agents"],
+    "technologies": [
+      "Command R / R+ (128K Context, RAG Optimized)",
+      "Rerank 3.5 (Multilingual Reranking)",
+      "Embed 3 (Multilingual Embeddings)",
+      "North (Enterprise RAG Platform)",
+      "Fine-tuning API",
+      "PII Detection (Classify)",
+      "Guardrails (Custom)",
+      "Tool Use / Function Calling"
+    ],
+    "keyPapers": [
+      "Command R: Scaling Generative Models for RAG (2024)",
+      "Rerank 3: Improved Multilingual Reranking (2024)"
+    ],
+    "benchmarks": {
+      "contextWindow": 128000,
+      "rerankLatency": "< 100ms for 100 docs",
+      "ragQuality": "Command R+ beats GPT-4 on RAG benchmarks"
+    },
+    "openSource": false,
+    "license": "Proprietary API / Open Weights (Command R)",
+    "github": "https://github.com/cohere-ai",
+    "blog": "https://cohere.com/blog",
+    "notes": "Command R/R+ are purpose-built for enterprise RAG. Rerank 3.5 is SOTA for reranking."
+  },
+  {
+    "id": "voyage-ai",
+    "name": "Voyage AI",
+    "website": "https://www.voyageai.com",
+    "topics": ["context-handling"],
+    "technologies": [
+      "Voyage-3 / 3-Large (Embeddings)",
+      "Voyage-Code-3 (Code Embeddings)",
+      "Voyage-Rerank-2 (Reranker)",
+      "Domain-Specific Embeddings (Finance, Law, Medical)",
+      "Matryoshka Embeddings (Truncatable)",
+      "Quantized Embeddings (Binary/Int8)"
+    ],
+    "keyPapers": [
+      "Voyage Embeddings: Better Retrieval for RAG (2024)",
+      "Matryoshka Embeddings (2022)"
+    ],
+    "benchmarks": {
+      "embeddingDim": "1024 (truncatable to 256)",
+      "rerankQuality": "SOTA on BEIR benchmark",
+      "quantization": "Binary: 32x storage reduction, <3% quality loss"
+    },
+    "openSource": false,
+    "license": "Proprietary API",
+    "github": "https://github.com/voyage-ai",
+    "blog": "https://blog.voyageai.com",
+    "notes": "Best-in-class embeddings for RAG. Matryoshka + quantization enables efficient storage."
+  },
+  {
+    "id": "private-ai",
+    "name": "Private AI",
+    "website": "https://private-ai.com",
+    "topics": ["data-leak-prevention"],
+    "technologies": [
+      "PrivateGPT (PII Detection/Redaction)",
+      "50+ Entity Types, 52 Languages",
+      "On-Premise Deployment (Docker/K8s)",
+      "Structured/Unstructured Data",
+      "GDPR/HIPAA/PCI Compliance",
+      "Synthetic Data Generation",
+      "LLM Integration (PrivateLLM)"
+    ],
+    "keyPapers": [],
+    "benchmarks": {
+      "accuracy": "99%+ PII detection F1",
+      "latency": "< 50ms per document",
+      "languages": 52,
+      "entityTypes": 50
+    },
+    "openSource": false,
+    "license": "Commercial",
+    "github": "https://github.com/private-ai",
+    "blog": "https://private-ai.com/blog",
+    "notes": "Production-grade PII detection for enterprise. On-prem deployment for data sovereignty."
+  },
+  {
+    "id": "lakera",
+    "name": "Lakera",
+    "website": "https://www.lakera.ai",
+    "topics": ["data-leak-prevention"],
+    "technologies": [
+      "Gandalf (Prompt Injection Game/Training)",
+      "Lakera Guard (Prompt Injection Defense)",
+      "PII Detection",
+      "Content Moderation",
+      "Jailbreak Detection",
+      "Real-time API"
+    ],
+    "keyPapers": [],
+    "benchmarks": {
+      "injectionDetection": "95%+ on Gandalf benchmark",
+      "latency": "< 20ms API response",
+      "falsePositiveRate": "< 1%"
+    },
+    "openSource": false,
+    "license": "Commercial",
+    "github": "https://github.com/lakera-ai",
+    "blog": "https://www.lakera.ai/blog",
+    "notes": "Specialized in prompt injection defense. Gandalf is famous educational tool."
+  },
+  {
+    "id": "ollama",
+    "name": "Ollama",
+    "website": "https://ollama.com",
+    "topics": ["local-agents"],
+    "technologies": [
+      "Local Model Runtime (CLI/Server)",
+      "Model Library (100+ models)",
+      "Modelfile (Custom Models)",
+      "REST API (OpenAI Compatible)",
+      "GPU/CPU Auto-detection",
+      "Metal (macOS) / CUDA / ROCm / Vulkan",
+      "Ollama Python/JS SDKs",
+      "Multimodal Support (Vision)"
+    ],
+    "keyPapers": [],
+    "benchmarks": {
+      "modelsSupported": "100+ (Llama, Gemma, Phi, Qwen, etc.)",
+      "quantizationFormats": "GGUF (Q4_K_M, Q8_0, etc.)",
+      "platforms": "macOS, Linux, Windows, Docker"
+    },
+    "openSource": true,
+    "license": "MIT",
+    "github": "https://github.com/ollama/ollama",
+    "blog": "https://ollama.com/blog",
+    "notes": "Easiest local LLM deployment. OpenAI-compatible API enables drop-in replacement."
+  },
+  {
+    "id": "lm-studio",
+    "name": "LM Studio",
+    "website": "https://lmstudio.ai",
+    "topics": ["local-agents"],
+    "technologies": [
+      "Desktop App (Model Discovery/Chat)",
+      "Local Server (OpenAI Compatible)",
+      "Model Benchmarking",
+      "GGUF Model Management",
+      "Hardware Detection (NPU/GPU/CPU)",
+      "RAG with Local Documents",
+      "Multi-Model Chat"
+    ],
+    "keyPapers": [],
+    "benchmarks": {
+      "modelsSupported": "1000+ GGUF models",
+      "platforms": "macOS (Apple Silicon), Windows, Linux"
+    },
+    "openSource": false,
+    "license": "Free for Personal Use",
+    "github": "",
+    "blog": "https://lmstudio.ai/blog",
+    "notes": "Best UX for local LLM experimentation. Built-in benchmarking and RAG."
+  },
+  {
+    "id": "mlc-llm",
+    "name": "MLC-LLM",
+    "website": "https://llm.mlc.ai",
+    "topics": ["local-agents", "token-saving"],
+    "technologies": [
+      "MLC-LLM (ML Compilation)",
+      "TVM Unity (Compiler Stack)",
+      "WebGPU / WebAssembly / CUDA / Metal / Vulkan",
+      "Universal Deployment (Browser, Mobile, Edge, Server)",
+      "Hugging Face Model Import",
+      "LoRA Fine-tuning Support",
+      "Speculative Decoding",
+      "PagedAttention (vLLM-style)"
+    ],
+    "keyPapers": [
+      "MLC-LLM: Universal LLM Deployment (2023)",
+      "TVM Unity: Compiler for ML (2023)"
+    ],
+    "benchmarks": {
+      "platforms": "Browser (WebGPU), iOS/Android, Desktop, Server",
+      "speedup": "2-5x vs PyTorch on same hardware",
+      "modelFormats": "Hugging Face, GGUF, ONNX"
+    },
+    "openSource": true,
+    "license": "Apache 2.0",
+    "github": "https://github.com/mlc-ai",
+    "blog": "https://blog.mlc.ai",
+    "notes": "Only solution running LLMs in browser via WebGPU. Universal deployment story."
+  },
+  {
+    "id": "llama-cpp",
+    "name": "llama.cpp / GGUF",
+    "website": "https://github.com/ggerganov/llama.cpp",
+    "topics": ["local-agents", "token-saving"],
+    "technologies": [
+      "llama.cpp (Pure C/C++ Inference)",
+      "GGUF (Quantization Format)",
+      "K-Quants (Q2_K, Q3_K, Q4_K, Q5_K, Q6_K, Q8_0)",
+      "Metal (Apple Silicon) / CUDA / Vulkan / SYCL",
+      "llama-server (OpenAI Compatible API)",
+      "Parallel Inference (Multi-GPU/CPU)",
+      "Grammar/JSON Schema Constrained Generation",
+      "Speculative Decoding (Draft Models)"
+    ],
+    "keyPapers": [],
+    "benchmarks": {
+      "quantizationFormats": "10+ K-quant variants",
+      "platforms": "CPU, Apple Silicon, NVIDIA, AMD, Intel GPU",
+      "speed": "Fastest CPU inference, competitive GPU"
+    },
+    "openSource": true,
+    "license": "MIT",
+    "github": "https://github.com/ggerganov/llama.cpp",
+    "blog": "",
+    "notes": "Foundation for most local LLM tools (Ollama, LM Studio, etc.). GGUF is de facto standard."
+  },
+  {
+    "id": "vllm",
+    "name": "vLLM / SGLang",
+    "website": "https://vllm.ai",
+    "topics": ["token-saving", "local-agents"],
+    "technologies": [
+      "vLLM (PagedAttention, High-Throughput Serving)",
+      "SGLang (Structured Generation Language)",
+      "PagedAttention (KV Cache Management)",
+      "Chunked Prefill",
+      "Prefix Caching",
+      "Speculative Decoding",
+      "Structured Output (JSON/Regex/Grammar)",
+      "Multi-LoRA Serving",
+      "Pipeline/Tensor Parallelism"
+    ],
+    "keyPapers": [
+      "vLLM: Easy, Fast, and Cheap LLM Serving (2023)",
+      "SGLang: Structured Generation for LLMs (2024)",
+      "PagedAttention: Efficient KV Cache Management (2023)"
+    ],
+    "benchmarks": {
+      "throughput": "20-30x HF Transformers",
+      "pagedAttention": "Near-optimal KV cache memory usage",
+      "structuredOutput": "Zero-overhead constrained generation"
+    },
+    "openSource": true,
+    "license": "Apache 2.0",
+    "github": "https://github.com/vllm-project",
+    "blog": "https://blog.vllm.ai",
+    "notes": "Production standard for LLM serving. SGLang adds structured generation."
+  },
+  {
+    "id": "huggingface",
+    "name": "Hugging Face",
+    "website": "https://huggingface.co",
+    "topics": ["local-agents", "token-saving", "context-handling", "data-leak-prevention"],
+    "technologies": [
+      "Transformers (Model Hub)",
+      "SmolLM / SmolVLM (Tiny Models)",
+      "Idefics3 (Vision-Language)",
+      "Transformers.js (Browser Inference)",
+      "Text Generation Inference (TGI)",
+      "Optimum (Optimization: ONNX, TensorRT, OpenVINO)",
+      "PEFT/LoRA/QLoRA (Fine-tuning)",
+      "SafeTensors (Secure Format)",
+      "Datasets Hub",
+      "Spaces (Demo Hosting)",
+      "Leaderboards (Open LLM, RAG, etc.)"
+    ],
+    "keyPapers": [
+      "SmolLM: Small Language Models (2024)",
+      "Idefics3: Vision-Language Models (2024)",
+      "QLoRA: Efficient Finetuning (2023)",
+      "SafeTensors (2023)"
+    ],
+    "benchmarks": {
+      "modelsHosted": "500K+",
+      "smollmPerf": "1.7B beats 7B models on benchmarks",
+      "transformersJs": "Runs in browser via WebGPU/WASM"
+    },
+    "openSource": true,
+    "license": "Apache 2.0 / Various",
+    "github": "https://github.com/huggingface",
+    "blog": "https://huggingface.co/blog",
+    "notes": "Central hub for open models. SmolLM shows tiny models can be strong. Transformers.js enables browser AI."
+  },
+  {
+    "id": "apple",
+    "name": "Apple",
+    "website": "https://machinelearning.apple.com",
+    "topics": ["local-agents", "data-leak-prevention"],
+    "technologies": [
+      "OpenELM (Open Efficient Language Models)",
+      "Ferret-UI (Screen Understanding)",
+      "On-Device Intelligence (Private Cloud Compute)",
+      "Core ML / Neural Engine Optimization",
+      "Private Cloud Compute (PCC)",
+      "Apple Intelligence (iOS 18+)",
+      "Local-First Architecture"
+    ],
+    "keyPapers": [
+      "OpenELM: Efficient Language Models (2024)",
+      "Ferret-UI: Grounded Mobile UI Understanding (2024)",
+      "Private Cloud Compute: Privacy-Preserving Cloud AI (2024)"
+    ],
+    "benchmarks": {
+      "models": "OpenELM: 270M, 450M, 1.1B, 3B params",
+      "neuralEngine": "Optimized for Apple Silicon NPU",
+      "privacy": "End-to-end encryption, no Apple access"
+    },
+    "openSource": true,
+    "license": "Apple Sample Code License",
+    "github": "https://github.com/apple",
+    "blog": "https://machinelearning.apple.com/research",
+    "notes": "Privacy-first local AI. Private Cloud Compute is novel architecture for private cloud inference."
+  },
+  {
+    "id": "agno",
+    "name": "Agno (formerly Phidata)",
+    "website": "https://github.com/agno-agi/agno",
+    "topics": ["local-agents"],
+    "technologies": [
+      "Agno Agent Framework",
+      "Type-Safe Agents (Pydantic)",
+      "Local-First Design",
+      "Memory/Knowledge/Tools/Reasoning",
+      "Multi-Agent Teams",
+      "Structured Output",
+      "Model Agnostic (OpenAI, Ollama, Anthropic, etc.)",
+      "Agent UI (Playground)"
+    ],
+    "keyPapers": [],
+    "benchmarks": {},
+    "openSource": true,
+    "license": "MIT",
+    "github": "https://github.com/agno-agi/agno",
+    "blog": "https://docs.agno.com",
+    "notes": "Modern, type-safe agent framework. Excellent local-first support with Ollama."
+  },
+  {
+    "id": "pydanticai",
+    "name": "PydanticAI",
+    "website": "https://ai.pydantic.dev",
+    "topics": ["local-agents"],
+    "technologies": [
+      "PydanticAI Agent Framework",
+      "Type-Safe (Pydantic Models)",
+      "Model Agnostic",
+      "Structured Output (Native)",
+      "Dependency Injection",
+      "Testing Utilities",
+      "Graph-Based Agents",
+      "Streaming Support"
+    ],
+    "keyPapers": [],
+    "benchmarks": {},
+    "openSource": true,
+    "license": "MIT",
+    "github": "https://github.com/pydantic/pydantic-ai",
+    "blog": "https://ai.pydantic.dev/blog",
+    "notes": "Best developer experience for type-safe agents. Built by Pydantic team."
+  },
+  {
+    "id": "nemo-guardrails",
+    "name": "NVIDIA NeMo Guardrails",
+    "website": "https://github.com/NVIDIA/NeMo-Guardrails",
+    "topics": ["data-leak-prevention"],
+    "technologies": [
+      "Colang (Guardrail Specification Language)",
+      "Input/Output Rails",
+      "Dialog Rails (Flow Control)",
+      "Retrieval Rails (Fact-Checking)",
+      "Execution Rails (Tool Safety)",
+      "PII Detection Integration",
+      "Custom Actions (Python)",
+      "LangChain/LlamaIndex Integration"
+    ],
+    "keyPapers": [
+      "NeMo Guardrails: Toolkit for Controllable LLM Apps (2023)"
+    ],
+    "benchmarks": {
+      "latencyOverhead": "< 10ms per rail",
+      "railsSupported": "Input, Output, Dialog, Retrieval, Execution"
+    },
+    "openSource": true,
+    "license": "Apache 2.0",
+    "github": "https://github.com/NVIDIA/NeMo-Guardrails",
+    "blog": "https://developer.nvidia.com/blog/tag/nemo-guardrails/",
+    "notes": "Most mature programmable guardrails framework. Colang is declarative and powerful."
+  },
+  {
+    "id": "guardrails-ai",
+    "name": "Guardrails AI",
+    "website": "https://www.guardrailsai.com",
+    "topics": ["data-leak-prevention"],
+    "technologies": [
+      "Guardrails Hub (Validator Library)",
+      "PII Validators (50+ types)",
+      "Structured Output (JSON/XML/SQL)",
+      "Competitor/Toxicity/Hallucination Detection",
+      "Custom Validators (Python)",
+      "Rail Spec (XML-based)",
+      "Streaming Validation",
+      "Pydantic Integration"
+    ],
+    "keyPapers": [],
+    "benchmarks": {
+      "validators": "100+ in Guardrails Hub",
+      "piiTypes": "50+ entity types",
+      "streamingSupport": "Token-level validation"
+    },
+    "openSource": true,
+    "license": "Apache 2.0",
+    "github": "https://github.com/guardrails-ai",
+    "blog": "https://www.guardrailsai.com/blog",
+    "notes": "Large validator ecosystem. Strong PII and structured output validation."
+  },
+  {
+    "id": "presidio",
+    "name": "Microsoft Presidio",
+    "website": "https://microsoft.github.io/presidio/",
+    "topics": ["data-leak-prevention"],
+    "technologies": [
+      "Presidio Analyzer (PII Detection)",
+      "Presidio Anonymizer (Redaction/Replacement)",
+      "50+ Built-in Recognizers",
+      "Custom Recognizer Support",
+      "NLP Engine (spaCy/Transformers/Stanza)",
+      "Multi-language (20+)",
+      "Batch/Streaming Processing",
+      "Azure Integration (Purview)"
+    ],
+    "keyPapers": [],
+    "benchmarks": {
+      "recognizers": "50+ built-in",
+      "languages": "20+",
+      "deployment": "Python package, Docker, Azure"
+    },
+    "openSource": true,
+    "license": "MIT",
+    "github": "https://github.com/microsoft/presidio",
+    "blog": "https://techcommunity.microsoft.com/t5/microsoft-presidio/bg-p/MicrosoftPresidio",
+    "notes": "Production-grade, enterprise PII detection. Used in Microsoft 365/Purview."
+  },
+  {
+    "id": "openai",
+    "name": "OpenAI",
+    "website": "https://openai.com",
+    "topics": ["token-saving", "context-handling", "data-leak-prevention", "local-agents"],
+    "technologies": [
+      "Prompt Caching API (50% cost & 80% latency reduction)",
+      "GPT-4o mini (High-throughput compact model)",
+      "Structured Outputs (JSON Schema constrained decoding)",
+      "Batch API (50% cost reduction for async inference)",
+      "Whisper (Open-source on-device speech-to-text)",
+      "CLIP (Open-source multimodal embedding representation)",
+      "Tiktoken (Fast BPE tokenization engine in Rust)",
+      "Fine-Tuning API with DPO / LoRA support"
+    ],
+    "keyPapers": [
+      "Language Models are Few-Shot Learners (GPT-3, 2020)",
+      "Robust Speech Recognition via Large-Scale Weak Supervision (Whisper, 2022)",
+      "Learning Transferable Visual Models From Natural Language Supervision (CLIP, 2021)"
+    ],
+    "benchmarks": {
+      "contextWindow": 128000,
+      "tokenSaving": "Prompt Caching: 50% discount on cached input tokens, 80% latency drop",
+      "inferenceSpeed": "GPT-4o mini: 2x faster than GPT-3.5 Turbo",
+      "edgeModels": "Whisper tiny/base runs locally on CPU and edge mobile"
+    },
+    "openSource": false,
+    "license": "Proprietary API / MIT (Whisper, Tiktoken, CLIP)",
+    "github": "https://github.com/openai",
+    "blog": "https://openai.com/news/",
+    "notes": "Industry frontier model pioneer. Open-sources foundational edge models (Whisper, CLIP, Tiktoken) while serving prompt caching on API."
+  }
+]

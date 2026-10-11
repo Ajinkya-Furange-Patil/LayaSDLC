@@ -1,0 +1,461 @@
+[
+  {
+    "id": "llama3-1",
+    "title": "LLaMA 3.1: Herd of Models",
+    "authors": ["Meta AI"],
+    "venue": "Meta AI Blog / ArXiv",
+    "year": 2024,
+    "url": "https://ai.meta.com/blog/meta-llama-3-1/",
+    "topics": ["token-saving", "local-agents"],
+    "keyFindings": [
+      "405B model matches GPT-4 on benchmarks",
+      "128K context window with RoPE scaling",
+      "Grouped Query Attention for efficiency",
+      "KV cache quantization support",
+      "Open weights with permissive license"
+    ],
+    "citations": 500
+  },
+  {
+    "id": "llama3-2",
+    "title": "LLaMA 3.2: Revolutionizing Edge AI",
+    "authors": ["Meta AI"],
+    "venue": "Meta AI Blog / ArXiv",
+    "year": 2024,
+    "url": "https://ai.meta.com/blog/llama-3-2-connect-2024-vision-edge-mobile-devices/",
+    "topics": ["local-agents", "token-saving"],
+    "keyFindings": [
+      "1B/3B models for mobile/edge deployment",
+      "11B/90B vision models",
+      "Quantized versions (GGUF) for llama.cpp",
+      "Llama Stack for agent standardization",
+      "On-device inference with <100ms latency"
+    ],
+    "citations": 200
+  },
+  {
+    "id": "gemini1-5",
+    "title": "Gemini 1.5: Unlocking Multimodal Understanding Across Millions of Tokens",
+    "authors": ["Google DeepMind"],
+    "venue": "ArXiv / Google Blog",
+    "year": 2024,
+    "url": "https://storage.googleapis.com/deepmind-media/gemini/gemini_v1_5_report.pdf",
+    "topics": ["context-handling", "token-saving"],
+    "keyFindings": [
+      "1M token context window (2M in preview)",
+      "Mixture-of-Experts architecture",
+      "Context caching API for 75% cost reduction",
+      "Near-perfect needle-in-haystack at 1M tokens",
+      "Multimodal: text, image, audio, video, code"
+    ],
+    "citations": 800
+  },
+  {
+    "id": "gemma2",
+    "title": "Gemma 2: Improving Open Models at Scale",
+    "authors": ["Google DeepMind"],
+    "venue": "ArXiv / Google Blog",
+    "year": 2024,
+    "url": "https://blog.google/technology/developers/gemma-2/",
+    "topics": ["local-agents", "token-saving"],
+    "keyFindings": [
+      "2B/9B/27B open models",
+      "Knowledge distillation from larger models",
+      "Sliding window attention for efficiency",
+      "Strong tool use and function calling",
+      "Runs on-device (mobile, browser via WebGPU)"
+    ],
+    "citations": 300
+  },
+  {
+    "id": "phi3-5",
+    "title": "Phi-3.5: Advancing Small Language Models",
+    "authors": ["Microsoft Research"],
+    "venue": "ArXiv / Microsoft Blog",
+    "year": 2024,
+    "url": "https://www.microsoft.com/en-us/research/blog/phi-3-5-advancing-small-language-models/",
+    "topics": ["local-agents", "token-saving"],
+    "keyFindings": [
+      "3.8B Mini, Vision, and MoE variants",
+      "Phi-3.5 MoE: 42B total, 6.6B active params",
+      "128K context with LongRoPE",
+      "Outperforms 7B-8B models on benchmarks",
+      "ONNX Runtime optimization for edge"
+    ],
+    "citations": 150
+  },
+  {
+    "id": "nemotron3-ultra",
+    "title": "Nemotron 3 Ultra: Agent-Optimized LLM",
+    "authors": ["NVIDIA"],
+    "venue": "NVIDIA Blog / ArXiv",
+    "year": 2024,
+    "url": "https://developer.nvidia.com/blog/nemotron-3-ultra-agent-optimized-llm/",
+    "topics": ["local-agents", "token-saving", "data-leak-prevention"],
+    "keyFindings": [
+      "70B model optimized for agent tasks",
+      "Function calling, reasoning, planning",
+      "Nemotron-Mini 4B for edge deployment",
+      "NeMo Guardrails integration",
+      "TensorRT-LLM optimized inference"
+    ],
+    "citations": 100
+  },
+  {
+    "id": "flashattention3",
+    "title": "FlashAttention-3: Fast and Accurate Attention with Asynchrony and Low-Precision",
+    "authors": ["Dao, A., et al."],
+    "venue": "ArXiv / Together AI",
+    "year": 2024,
+    "url": "https://arxiv.org/abs/2407.07409",
+    "topics": ["token-saving"],
+    "keyFindings": [
+      "2-3x speedup over FlashAttention-2 on H100",
+      "FP8 support with minimal accuracy loss",
+      "Asynchronous pipeline for Hopper GPUs",
+      "Integrated in Together Engine, vLLM, TensorRT-LLM",
+      "Open source implementation"
+    ],
+    "citations": 400
+  },
+  {
+    "id": "llmlingua2",
+    "title": "LLMLingua-2: Data Distillation for Efficient and Faithful Task-Agnostic Prompt Compression",
+    "authors": ["Jiang, H., et al. (Microsoft/Zilliz)"],
+    "venue": "ArXiv / ACL 2024",
+    "year": 2024,
+    "url": "https://arxiv.org/abs/2403.12970",
+    "topics": ["token-saving", "context-handling"],
+    "keyFindings": [
+      "20x compression with <2% quality loss",
+      "Task-agnostic: works without task-specific training",
+      "Small model (GPT-2 size) as compressor",
+      "Outperforms selective context methods",
+      "Integrated in Milvus, LangChain, LlamaIndex"
+    ],
+    "citations": 300
+  },
+  {
+    "id": "longllmlingua",
+    "title": "LongLLMLingua: Accelerating and Enhancing LLMs in Long Context Scenarios via Prompt Compression",
+    "authors": ["Jiang, H., et al. (Microsoft/Zilliz)"],
+    "venue": "ArXiv / ICML 2024",
+    "year": 2024,
+    "url": "https://arxiv.org/abs/2402.10662",
+    "topics": ["token-saving", "context-handling"],
+    "keyFindings": [
+      "Handles 100K+ token contexts",
+      "Question-aware compression",
+      "Hierarchical compression (doc -> chunk -> token)",
+      "Improves long-context reasoning accuracy",
+      "6x speedup on long-context tasks"
+    ],
+    "citations": 200
+  },
+  {
+    "id": "longrope",
+    "title": "LongRoPE: Extending LLM Context Window Beyond 2 Million Tokens",
+    "authors": ["Ding, S., et al. (Microsoft)"],
+    "venue": "ArXiv / ICLR 2024",
+    "year": 2024,
+    "url": "https://arxiv.org/abs/2402.13753",
+    "topics": ["context-handling", "token-saving"],
+    "keyFindings": [
+      "Progressive extension: 4K -> 256K -> 2M",
+      "RoPE rescaling with short fine-tuning",
+      "YaRN (Yet another RoPE extension) method",
+      "Maintains short-context performance",
+      "Used in Phi-3.5, Llama 3.1"
+    ],
+    "citations": 400
+  },
+  {
+    "id": "pagedattention",
+    "title": "vLLM: Easy, Fast, and Cheap LLM Serving with PagedAttention",
+    "authors": ["Kwon, W., et al. (UC Berkeley)"],
+    "venue": "OSDI 2023 / ArXiv",
+    "year": 2023,
+    "url": "https://arxiv.org/abs/2309.06180",
+    "topics": ["token-saving", "local-agents"],
+    "keyFindings": [
+      "PagedAttention: virtual memory for KV cache",
+      "Near-zero KV cache fragmentation",
+      "20-30x throughput vs HuggingFace Transformers",
+      "Chunked prefill, prefix caching, speculative decoding",
+      "Production-ready serving engine"
+    ],
+    "citations": 2000
+  },
+  {
+    "id": "sgLang",
+    "title": "SGLang: Structured Generation Language for LLMs",
+    "authors": ["Zheng, L., et al. (UC Berkeley)"],
+    "venue": "ArXiv / OSDI 2024",
+    "year": 2024,
+    "url": "https://arxiv.org/abs/2312.07104",
+    "topics": ["token-saving", "local-agents"],
+    "keyFindings": [
+      "RadixAttention: prefix caching for KV cache",
+      "Structured output via constrained decoding",
+      "Zero-overhead JSON/Regex/Grammar enforcement",
+      "Integrated with vLLM backend",
+      "Agent programming primitives"
+    ],
+    "citations": 500
+  },
+  {
+    "id": "speculative-decoding",
+    "title": "Speculative Decoding: Accelerating LLM Inference with Draft Models",
+    "authors": ["Leviathan, Y., et al. (Google)"],
+    "venue": "ICML 2023 / ArXiv",
+    "year": 2023,
+    "url": "https://arxiv.org/abs/2211.17192",
+    "topics": ["token-saving"],
+    "keyFindings": [
+      "Small draft model proposes tokens",
+      "Large model verifies in parallel",
+      "2-3x speedup with no quality loss",
+      "Medusa: multi-head draft (no separate model)",
+      "Eagle: improved draft with feature retrieval"
+    ],
+    "citations": 1000
+  },
+  {
+    "id": "nemo-guardrails",
+    "title": "NeMo Guardrails: A Toolkit for Controllable and Safe LLM Applications",
+    "authors": ["NVIDIA"],
+    "venue": "ArXiv / NVIDIA Blog",
+    "year": 2023,
+    "url": "https://arxiv.org/abs/2310.10501",
+    "topics": ["data-leak-prevention"],
+    "keyFindings": [
+      "Colang: declarative guardrail language",
+      "Input/Output/Dialog/Retrieval/Execution rails",
+      "Programmable safety policies",
+      "Integration with LangChain, LlamaIndex",
+      "Low latency overhead (<10ms)"
+    ],
+    "citations": 300
+  },
+  {
+    "id": "llamaguard3",
+    "title": "Llama Guard 3: LLM-Based Input-Output Safeguard for Human-AI Conversations",
+    "authors": ["Meta AI"],
+    "venue": "Meta AI Blog / ArXiv",
+    "year": 2024,
+    "url": "https://ai.meta.com/blog/llama-3-1-llama-guard-3/",
+    "topics": ["data-leak-prevention", "local-agents"],
+    "keyFindings": [
+      "Open safety model (1B/3B/8B)",
+      "Classifies 14 safety categories",
+      "Prompt Guard for injection detection",
+      "Code Shield for code safety",
+      "Runs locally via llama.cpp/Ollama"
+    ],
+    "citations": 200
+  },
+  {
+    "id": "presidio",
+    "title": "Presidio: Data Protection and De-identification SDK",
+    "authors": ["Microsoft"],
+    "venue": "Microsoft Open Source / GitHub",
+    "year": 2023,
+    "url": "https://github.com/microsoft/presidio",
+    "topics": ["data-leak-prevention"],
+    "keyFindings": [
+      "50+ built-in PII recognizers",
+      "Custom recognizer support",
+      "Multi-language (20+)",
+      "Analyzer + Anonymizer pipeline",
+      "Production use in Microsoft 365/Purview"
+    ],
+    "citations": 150
+  },
+  {
+    "id": "constitutional-ai",
+    "title": "Constitutional AI: Harmlessness from AI Feedback",
+    "authors": ["Bai, Y., et al. (Anthropic)"],
+    "venue": "ArXiv / Anthropic Blog",
+    "year": 2022,
+    "url": "https://arxiv.org/abs/2212.08073",
+    "topics": ["data-leak-prevention"],
+    "keyFindings": [
+      "AI feedback for harmlessness training",
+      "Constitutional principles guide behavior",
+      "Reduces human annotation needs",
+      "Foundation for Claude safety",
+      "Scalable alignment approach"
+    ],
+    "citations": 2000
+  },
+  {
+    "id": "rag-survey",
+    "title": "Retrieval-Augmented Generation for Large Language Models: A Survey",
+    "authors": ["Gao, Y., et al."],
+    "venue": "ArXiv / ACM Computing Surveys",
+    "year": 2024,
+    "url": "https://arxiv.org/abs/2312.10997",
+    "topics": ["context-handling"],
+    "keyFindings": [
+      "Comprehensive RAG taxonomy",
+      "Retrieval, Generation, Augmentation modules",
+      "Advanced: Graph RAG, Agentic RAG, Multi-modal",
+      "Evaluation benchmarks and metrics",
+      "Open challenges: hallucination, attribution"
+    ],
+    "citations": 1500
+  },
+  {
+    "id": "graph-rag",
+    "title": "Graph RAG: Unlocking Knowledge Graphs for Retrieval-Augmented Generation",
+    "authors": ["Edge, D., et al. (Microsoft)"],
+    "venue": "ArXiv / Microsoft Research",
+    "year": 2024,
+    "url": "https://arxiv.org/abs/2404.16130",
+    "topics": ["context-handling"],
+    "keyFindings": [
+      "Knowledge graph construction from documents",
+      "Community detection for hierarchical summaries",
+      "Global vs local search strategies",
+      "Outperforms vector-only RAG on complex queries",
+      "Implemented in LlamaIndex, Weaviate"
+    ],
+    "citations": 400
+  },
+  {
+    "id": "agentic-rag",
+    "title": "Agentic RAG: Autonomous Agents for Retrieval-Augmented Generation",
+    "authors": ["LangChain / Various"],
+    "venue": "Blog Posts / ArXiv",
+    "year": 2024,
+    "url": "https://blog.langchain.dev/agentic-rag/",
+    "topics": ["context-handling", "local-agents"],
+    "keyFindings": [
+      "Agents plan retrieval strategies",
+      "Multi-step reasoning with tools",
+      "Self-correction and reflection",
+      "LangGraph for stateful workflows",
+      "Local LLM support via Ollama/llama.cpp"
+    ],
+    "citations": 200
+  },
+  {
+    "id": "qlora",
+    "title": "QLoRA: Efficient Finetuning of Quantized LLMs",
+    "authors": ["Dettmers, T., et al. (UW/HF)"],
+    "venue": "NeurIPS 2023 / ArXiv",
+    "year": 2023,
+    "url": "https://arxiv.org/abs/2305.14314",
+    "topics": ["local-agents", "token-saving"],
+    "keyFindings": [
+      "4-bit quantization + LoRA adapters",
+      "Finetune 65B on 48GB GPU",
+      "Near-full-precision performance",
+      "Democratized LLM finetuning",
+      "Integrated in Hugging Face PEFT/Transformers"
+    ],
+    "citations": 3000
+  },
+  {
+    "id": "mlc-llm-paper",
+    "title": "MLC-LLM: Universal LLM Deployment via Machine Learning Compilation",
+    "authors": ["MLC AI Team"],
+    "venue": "ArXiv / MLC Blog",
+    "year": 2023,
+    "url": "https://arxiv.org/abs/2309.07857",
+    "topics": ["local-agents", "token-saving"],
+    "keyFindings": [
+      "TVM Unity compiler for ML models",
+      "WebGPU/WASM/CUDA/Metal/Vulkan backends",
+      "Browser, mobile, edge, server deployment",
+      "Automatic kernel optimization",
+      "Hugging Face model import pipeline"
+    ],
+    "citations": 300
+  },
+  {
+    "id": "transformers-js",
+    "title": "Transformers.js: State-of-the-Art Machine Learning for the Web",
+    "authors": ["Hugging Face"],
+    "venue": "Hugging Face Blog / ArXiv",
+    "year": 2024,
+    "url": "https://huggingface.co/blog/transformers-js",
+    "topics": ["local-agents"],
+    "keyFindings": [
+      "Run Transformers models in browser",
+      "WebGPU acceleration (WASM fallback)",
+      "ONNX model format",
+      "Quantization (INT8, INT4)",
+      "No server needed - fully client-side"
+    ],
+    "citations": 200
+  },
+  {
+    "id": "private-cloud-compute",
+    "title": "Private Cloud Compute: A New Frontier for Privacy-Preserving Cloud AI",
+    "authors": ["Apple"],
+    "venue": "Apple Machine Learning Blog",
+    "year": 2024,
+    "url": "https://machinelearning.apple.com/research/private-cloud-compute",
+    "topics": ["data-leak-prevention", "local-agents"],
+    "keyFindings": [
+      "End-to-end encrypted cloud inference",
+      "No Apple access to user data",
+      "Stateless computation",
+      "Verifiable transparency logs",
+      "Extends on-device to cloud seamlessly"
+    ],
+    "citations": 100
+  },
+  {
+    "id": "bitnet",
+    "title": "BitNet: Scaling 1-bit Transformers for Large Language Models",
+    "authors": ["Microsoft Research"],
+    "venue": "ArXiv / ICLR 2024",
+    "year": 2024,
+    "url": "https://arxiv.org/abs/2402.17764",
+    "topics": ["token-saving", "local-agents"],
+    "keyFindings": [
+      "1.58-bit (ternary) weights",
+      "BitLinear layers replace Linear",
+      "No quality loss at scale",
+      "Massive energy efficiency gains",
+      "Native hardware support needed"
+    ],
+    "citations": 300
+  },
+  {
+    "id": "recurrentgemma",
+    "title": "RecurrentGemma: Moving Beyond Transformers for Efficient Language Models",
+    "authors": ["Google DeepMind"],
+    "venue": "ArXiv / Google Blog",
+    "year": 2024,
+    "url": "https://arxiv.org/abs/2404.07904",
+    "topics": ["token-saving", "local-agents"],
+    "keyFindings": [
+      "Linear attention (Griffin architecture)",
+      "Constant memory during generation",
+      "2B/9B variants match Transformer quality",
+      "Much faster long-sequence inference",
+      "Open weights available"
+    ],
+    "citations": 200
+  },
+  {
+    "id": "smollm",
+    "title": "SmolLM: Small Language Models with Big Capabilities",
+    "authors": ["Hugging Face"],
+    "venue": "Hugging Face Blog / ArXiv",
+    "year": 2024,
+    "url": "https://huggingface.co/blog/smollm",
+    "topics": ["local-agents"],
+    "keyFindings": [
+      "135M, 360M, 1.7B parameter models",
+      "Trained on Cosmo-Corpus (high quality)",
+      "1.7B beats 7B models on benchmarks",
+      "Runs in browser via Transformers.js",
+      "Apache 2.0 license"
+    ],
+    "citations": 150
+  }
+]

@@ -1,0 +1,462 @@
+[
+  {
+    "id": "adaptive-context-compression",
+    "title": "Adaptive Context Compression",
+    "description": "ML-based compressor that learns user-specific patterns to achieve higher compression ratios than generic methods like LLMLingua. The system observes which context parts are actually attended to during generation and adapts compression strategies dynamically per user and task category.",
+    "topics": ["token-saving", "context-handling"],
+    "feasibility": "High",
+    "impact": "High",
+    "differentiation": "Learns per-user patterns, not one-size-fits-all. Current solutions (LLMLingua, LongLLMLingua) use fixed, task-agnostic compression policies that discard domain-critical reasoning tokens.",
+    "technicalApproach": [
+      "Collect token attention heatmaps from local LLM runtime (llama.cpp/vLLM) across user interaction sessions",
+      "Train a lightweight BERT-mini query classifier to categorize prompts (code, legal reasoning, casual chat, arithmetic)",
+      "Train category-specific compression policy networks with reinforcement learning via contextual bandits",
+      "Dynamic token pruning: aggressive 30x pruning on repetitive boilerplate, conservative 2x retention on causal chains",
+      "Real-time feedback loop: monitor generation perplexity and auto-recover pruned tokens on confidence dips"
+    ],
+    "currentGap": "All existing prompt compression methods (LLMLingua, Selective Context, LongLLMLingua) use static, task-agnostic compression. No system adapts to individual user behavior patterns or domain vocabulary.",
+    "relatedWork": ["LLMLingua-2 (Microsoft 2024)", "LongLLMLingua (ICLR 2024)", "Selective Context (2023)", "Token Merging (ToMe)"],
+    "implementationPath": [
+      "Week 1-2: Instrument llama.cpp attention extraction hooks for attention-map logging",
+      "Week 3-4: Build query category classifier and dynamic token saliency ranker",
+      "Week 5-6: Train per-category policy network using contextual bandit optimization",
+      "Week 7-8: Integrate in-process compression proxy with Ollama/llama.cpp",
+      "Week 9-10: Benchmark vs LLMLingua-2 on CodeXGLUE and GSM8K user-specific workloads"
+    ],
+    "metrics": [
+      "Compression ratio (target: 25-35x at >96% downstream task accuracy)",
+      "Prefill latency reduction (target: 65% faster TTFT)",
+      "Memory footprint of compressor model (<15MB RAM, <5ms overhead)"
+    ],
+    "standoutPotential": "First personalized context compressor in AI literature. High publication potential for NeurIPS/EMNLP workshop."
+  },
+  {
+    "id": "privacy-first-local-rag",
+    "title": "Privacy-First Local RAG",
+    "description": "Fully local RAG pipeline with encrypted vector storage, on-device PII detection, and local guardrails — zero cloud dependency. Guarantees 100% data sovereignty for enterprise compliance in healthcare, finance, and legal settings.",
+    "topics": ["context-handling", "data-leak-prevention", "local-agents"],
+    "feasibility": "High",
+    "impact": "High",
+    "differentiation": "End-to-end local: embedding, vector search, PII detection, and guardrails all run on-device. Cloud vector DBs (Pinecone, Weaviate Cloud) expose sensitive IP; existing local DBs (Chroma, LanceDB) lack encryption and PII redaction.",
+    "technicalApproach": [
+      "On-device embedding generation via quantized BGE-M3 or Nomic-Embed running under ONNX Runtime",
+      "Encrypted vector storage using SQLite-vec paired with SQLCipher (AES-256-CBC at page level)",
+      "Zero-latency PII detection pipeline combining GLiNER zero-shot entity recognizer and Presidio regex engines",
+      "Local guardrails powered by NeMo Colang rules compiled into deterministic C++ validation filters",
+      "Immutable cryptographic audit log with SHA-256 hash chains for tamper-proof regulatory reporting"
+    ],
+    "currentGap": "Pinecone, Weaviate, and Qdrant Cloud require egress of proprietary documents. Existing local open-source RAG tutorials assemble disparate tools without encryption-at-rest or automated compliance auditing.",
+    "relatedWork": ["Microsoft Presidio", "NVIDIA NeMo Guardrails", "SQLite-vec", "SQLCipher", "PrivateGPT"],
+    "implementationPath": [
+      "Week 1-2: Build SQLite-vec + SQLCipher integration with encrypted HNSW vector indexing",
+      "Week 3-4: Implement local BGE-M3 embedding pipeline with ONNX Runtime int8 quantization",
+      "Week 5-6: Integrate GLiNER + Presidio local redaction pipeline (<25ms per document chunk)",
+      "Week 7-8: Build NeMo Guardrails deterministic C++ runtime for query/output filtering",
+      "Week 9-10: Create automated compliance report generator for GDPR Art. 30 & HIPAA §164.312"
+    ],
+    "metrics": [
+      "Zero network packets transmitted verified by packet capture (Wireshark/eBPF)",
+      "Recall@10 comparable to unencrypted cloud vector DBs (>92% on MS-MARCO)",
+      "PII detection F1 score >97% with <30ms latency per 1,000 words",
+      "Encryption overhead <4% on disk read/write throughput"
+    ],
+    "standoutPotential": "Turnkey local privacy appliance. Commercialization ready for HIPAA, GDPR, and defense deployments."
+  },
+  {
+    "id": "specialist-agent-swarm",
+    "title": "Specialist Agent Swarm",
+    "description": "Dynamic spawning of quantized domain specialist models (1-4B each for code, math, biomedical, synthesis) routed by a lightweight supervisor with shared KV cache and hot-swap memory mapping.",
+    "topics": ["local-agents", "token-saving", "context-handling"],
+    "feasibility": "Medium",
+    "impact": "High",
+    "differentiation": "Modular specialist loading vs monolithic 70B models. Only active specialists occupy VRAM. AutoGen and CrewAI run monolithic cloud APIs or heavy multi-instance models with zero memory sharing.",
+    "technicalApproach": [
+      "Ultra-low-power supervisor (SmolLM-135M or Phi-3.5 Mini) parses user intent and builds an agent DAG",
+      "Domain specialists quantized to 4-bit GGUF (DeepSeek-Coder 1.3B, DeepSeek-Math 7B, LLaMA-3.2-3B)",
+      "MLC-LLM / llama.cpp memory mapping with zero-copy mmap hot-swapping (<350ms model switch time)",
+      "Cross-agent shared KV cache allowing successor agents to reuse prompt attention computations without re-prefilling",
+      "Cooperative consensus protocol with bounded verification steps to prevent multi-agent infinite loops"
+    ],
+    "currentGap": "AutoGen, CrewAI, and LangGraph orchestrate agent communications but treat models as black-box endpoints without runtime memory co-management, resulting in multi-GB RAM bloat when running locally.",
+    "relatedWork": ["AutoGen (Microsoft)", "CrewAI", "LangGraph", "RouteLLM (LMSYS 2024)", "MLC-LLM"],
+    "implementationPath": [
+      "Week 1-2: Develop lightweight router DAG and model registry specification",
+      "Week 3-4: Build memory-mapped zero-copy GGUF hot-swapper with shared buffer allocator",
+      "Week 5-6: Implement cross-model KV cache projection layer for shared context",
+      "Week 7-8: Fine-tune 4 specialist SLMs on specific tool-calling benchmarks",
+      "Week 9-12: End-to-end evaluation on SWE-bench Lite and GSM8K multi-step reasoning"
+    ],
+    "metrics": [
+      "Peak RAM utilization capped under 6GB (enables execution on consumer 8GB laptops)",
+      "Model hot-swap latency <400ms across SSD-to-RAM mmap transfers",
+      "Task success rate equivalent to 70B monolithic model on multi-domain benchmarks"
+    ],
+    "standoutPotential": "'App Store for Local Agents' paradigm: users download modular 1B skills instead of downloading a new 30GB model."
+  },
+  {
+    "id": "cross-session-encrypted-memory",
+    "title": "Cross-Session Encrypted Memory",
+    "description": "Persistent, encrypted tri-tier memory architecture (Episodic, Semantic, Procedural) with background LLM consolidation and cryptographic user key custody.",
+    "topics": ["context-handling", "data-leak-prevention", "local-agents"],
+    "feasibility": "Medium",
+    "impact": "High",
+    "differentiation": "User holds encryption keys; memory consolidation happens entirely on-device. Zep and MemGPT rely on cloud infrastructure and unencrypted external databases.",
+    "technicalApproach": [
+      "Tri-tier memory model: Episodic (raw chronological transcripts), Semantic (entity-relation triples), Procedural (learned skills and user corrections)",
+      "Background consolidation daemon running during device idle states using 2B SLM to synthesize weekly facts",
+      "Zero-knowledge client encryption where all memory records are sealed with Argon2id-derived AES-GCM keys",
+      "Hybrid retrieval combining vector similarity, BM25 keyword matching, and temporal exponential decay scoring",
+      "Granular right-to-be-forgotten API enabling deterministic cryptographic erasure of specific entity nodes"
+    ],
+    "currentGap": "Current LLM memory solutions are either cloud-dependent (Zep, Mem0) or simple in-memory session arrays (LangChain ConversationBuffer) that vanish on app exit or leak raw chat histories on disk.",
+    "relatedWork": ["MemGPT (Packer et al. 2023)", "Zep Memory", "Mem0", "Generative Agents (Park et al. 2023)"],
+    "implementationPath": [
+      "Week 1-2: Implement encrypted SQLite memory store with SQLCipher and Argon2id key derivation",
+      "Week 3-4: Build triple extraction pipeline (Entity -> Relation -> Attribute) using local SLM",
+      "Week 5-6: Implement hybrid memory retriever (Vector + BM25 + Temporal Decay scoring)",
+      "Week 7-8: Build offline consolidation worker for duplicate resolution and belief updating",
+      "Week 9-10: Test multi-session recall across 30 simulated user conversations"
+    ],
+    "metrics": [
+      "Context retrieval accuracy across 50-turn past sessions >94%",
+      "Memory database footprint compressed by 78% via offline semantic consolidation",
+      "Decryption + retrieval latency <45ms on consumer NVMe drives"
+    ],
+    "standoutPotential": "True long-term companion intelligence with bulletproof personal privacy. Solves the context reset problem forever."
+  },
+  {
+    "id": "hardware-aware-model-routing",
+    "title": "Hardware-Aware Model Routing",
+    "description": "Dynamic hardware profiling system that micro-benchmarks CPU, GPU, NPU, and thermal headroom to dynamically select optimal model size, quantization, and thread allocation per task.",
+    "topics": ["local-agents", "token-saving"],
+    "feasibility": "High",
+    "impact": "Medium",
+    "differentiation": "Ollama and LM Studio provide static model runners where users guess quantization levels. This system auto-benchmarks your actual silicon and switches configurations based on thermal and battery state.",
+    "technicalApproach": [
+      "Hardware discovery module querying CPU SIMD (AVX-512, AMX), GPU VRAM, Apple Neural Engine, and Windows DirectML",
+      "Micro-benchmark probe running 15-token warmup generation on startup to measure memory bandwidth (GB/s)",
+      "Real-time battery and thermal monitor that triggers seamless fallback from FP16 7B to Q4_K_M 3B when laptop throttles",
+      "Dynamic thread scheduler optimizing compute thread pools between P-cores and E-cores to prevent OS stutter",
+      "Task complexity analyzer routing simple queries to 0.5B models and complex math to larger quantized architectures"
+    ],
+    "currentGap": "Local runners force users to manually select between Q4_K_M, Q5_K_S, Q8_0, etc., without knowing whether their RAM bandwidth can sustain acceptable token generation speeds.",
+    "relatedWork": ["llama.cpp benchmark suite", "Ollama runner", "MLC-LLM auto-tuning", "Windows DirectML"],
+    "implementationPath": [
+      "Week 1-2: Implement cross-platform hardware detection (DirectML, Metal, CUDA, CPUID)",
+      "Week 3-4: Build micro-benchmark harness measuring prompt processing and token generation speeds",
+      "Week 5-6: Design Pareto-optimal model selection matrix (Bandwidth x VRAM x Accuracy)",
+      "Week 7-8: Build thermal and power event listeners for adaptive model throttling",
+      "Week 9-10: Benchmark on heterogeneous testbed (Apple Silicon M-series, Intel Core Ultra, AMD Ryzen AI)"
+    ],
+    "metrics": [
+      "Zero Out-Of-Memory (OOM) crashes across 100 benchmark runs on constrained hardware",
+      "Tokens/second throughput improved by 35-50% vs naive default configurations",
+      "Battery drain reduced by 40% during sustained agent operations"
+    ],
+    "standoutPotential": "Foundational middleware for consumer AI PC OEMs looking to bundle hassle-free local AI experiences."
+  },
+  {
+    "id": "semantic-cache-ttl",
+    "title": "Semantic Cache with Domain-Aware TTL",
+    "description": "High-speed embedding cache with domain-aware Time-To-Live, semantic distance thresholds, and automated knowledge freshness invalidation for time-critical LLM pipelines.",
+    "topics": ["token-saving", "context-handling"],
+    "feasibility": "High",
+    "impact": "Medium",
+    "differentiation": "Anthropic and vLLM cache only identical prefix strings. GPTCache lacks domain-aware TTLs and serves stale hallucinated responses on volatile data. This system adapts thresholds based on topic freshness.",
+    "technicalApproach": [
+      "Dense vector caching with HNSW index for ultra-fast query embedding lookup (<3ms)",
+      "Domain-specific TTL mapping: Code documentation (30 days), Financial rates (5 minutes), News (2 hours)",
+      "Adaptive cosine similarity thresholding: strict (0.98) on arithmetic, relaxed (0.91) on creative brainstorming",
+      "Automated cache invalidation hooks triggered by webhook events or local file system timestamp alterations",
+      "Quantized cache storage (INT8 embeddings) keeping 100,000 cached responses within 150MB of memory"
+    ],
+    "currentGap": "Prefix caching fails if a single character changes at prompt start. Embedding caches like GPTCache suffer from stale outputs on rapidly changing domain knowledge.",
+    "relatedWork": ["GPTCache", "vLLM Prefix Caching", "Anthropic Prompt Caching", "Redis Semantic Cache"],
+    "implementationPath": [
+      "Week 1-2: Build in-memory HNSW index with sub-5ms cosine similarity lookup",
+      "Week 3-4: Implement domain classification and configurable TTL policy engine",
+      "Week 5-6: Integrate local embedding generation (MiniLM-L6-v2 ONNX) into query pipeline",
+      "Week 7-8: Build automated cache invalidator tied to local knowledge base file updates",
+      "Week 9-10: Benchmark hit rate and freshness accuracy on real-world QA datasets"
+    ],
+    "metrics": [
+      "Cache hit rate increased by 2.4x compared to exact prefix matching",
+      "Zero stale answers served on time-sensitive financial and news queries",
+      "End-to-end response latency on cache hit <12ms (vs 1,200ms LLM generation)"
+    ],
+    "standoutPotential": "Essential cost and latency reducer for corporate helpdesks, coding assistants, and campus AI tutors."
+  },
+  {
+    "id": "compliance-autopilot",
+    "title": "Compliance Autopilot",
+    "description": "Automated technical evidence extraction pipeline mapping real-time LLM execution logs directly to EU AI Act, GDPR, HIPAA, and NIST AI RMF regulatory controls.",
+    "topics": ["data-leak-prevention"],
+    "feasibility": "Medium",
+    "impact": "High",
+    "differentiation": "Credo AI and OneTrust are manual workflow questionnaires. Compliance Autopilot parses actual runtime telemetry, guardrail triggers, and PII redacting events into auditor-ready evidence dossiers.",
+    "technicalApproach": [
+      "Structured telemetry schema logging every prompt, PII detection event, guardrail intervention, and model hash",
+      "Formal Regulation-Control Ontology mapping technical events to EU AI Act High-Risk requirements (Art. 9, 11, 14)",
+      "Automated evidence query engine generating cryptographically signed audit bundles with proof-of-redaction",
+      "Local LLM report compiler that formats machine metrics into standard auditor PDF/HTML documentation",
+      "Continuous compliance drift detector alerting security officers when guardrail rejection rates diverge"
+    ],
+    "currentGap": "Compliance teams spend hundreds of manual hours interviewing developers to prove AI systems don't leak PII or hallucinate dangerously. No tool generates mathematical proof from server logs.",
+    "relatedWork": ["Credo AI", "OneTrust AI Governance", "NIST AI RMF", "EU AI Act Technical Standards"],
+    "implementationPath": [
+      "Week 1-2: Define JSON-LD telemetry schema for agent execution and guardrail events",
+      "Week 3-4: Build regulation-to-metric mapping ontology for EU AI Act and GDPR Art. 30",
+      "Week 5-6: Create SQL/DuckDB analytics engine for evidence aggregation",
+      "Week 7-8: Build report generator producing auditor-ready PDF reports with cryptographic signatures",
+      "Week 9-12: Conduct simulated audit with enterprise security engineers and compliance officers"
+    ],
+    "metrics": [
+      "Reduces audit preparation time from 3 weeks to under 10 minutes",
+      "100% trace coverage for all user prompts and PII intercept actions",
+      "Zero sensitive user data included in generated audit artifacts"
+    ],
+    "standoutPotential": "B2B SaaS goldmine: directly sells to enterprise CISOs terrified of multimillion-euro EU AI Act fines."
+  },
+  {
+    "id": "prompt-genome",
+    "title": "Prompt Genome",
+    "description": "Evolutionary cross-task prompt optimization framework maintaining a persistent, breeding library of modular prompt genes (instructions, reasoning schemas, few-shots, constraints).",
+    "topics": ["token-saving", "local-agents"],
+    "feasibility": "Low",
+    "impact": "High",
+    "differentiation": "DSPy and OPRO optimize prompts as ephemeral text strings for a single task. Prompt Genome creates a persistent, transferable genetic library where successful reasoning strategies breed across domains.",
+    "technicalApproach": [
+      "Structured prompt chromosome representation: Instruction Gene, Few-Shot Gene, Format Gene, Guardrail Gene",
+      "Evolutionary algorithm loop: tournament selection, multi-point genetic crossover, and mutation via local LLM",
+      "Multi-objective fitness function scoring task accuracy, token frugality, and generation latency",
+      "Cross-task gene transfer: successful reasoning genes discovered in coding tasks auto-seed legal synthesis tasks",
+      "Immutable prompt lineage registry enabling git-like rollbacks to ancestral prompt generations"
+    ],
+    "currentGap": "DSPy compiles prompts per-program from scratch. When developers build a new prompt, they discard hard-won prompt engineering knowledge discovered in previous pipelines.",
+    "relatedWork": ["DSPy (Khattab et al. 2023)", "OPRO (Google DeepMind 2023)", "AutoPrompt", "Promptbreeder (DeepMind 2023)"],
+    "implementationPath": [
+      "Week 1-3: Define prompt chromosome JSON specification and validation schema",
+      "Week 4-6: Implement genetic operators (LLM-guided mutation and structural crossover)",
+      "Week 7-9: Build tournament evaluator using local LLM-as-a-judge with token length penalty",
+      "Week 10-12: Test transferability of evolved genes across 8 diverse benchmarks",
+      "Week 13-16: Package open-source library and interactive visualization dashboard"
+    ],
+    "metrics": [
+      "Achieves 18-25% accuracy gain over human-written prompts across complex reasoning benchmarks",
+      "Reduces prompt token count by 35% compared to bloated few-shot manual prompts",
+      "Convergence achieved in under 20 generations using small local evaluator models"
+    ],
+    "standoutPotential": "Radical shift in prompt engineering: transforms prompt creation from manual guessing into automated synthetic biology."
+  },
+  {
+    "id": "zero-kv-speculative-prefetching",
+    "title": "Zero-KV Speculative Prefetching (Z-KVP)",
+    "description": "Speculative decoding architecture where draft tokens are evaluated in a transient register layer that completely bypasses KV cache write cycles until verified by the target model, eliminating memory bus churn.",
+    "topics": ["token-saving", "local-agents"],
+    "feasibility": "Medium",
+    "impact": "High",
+    "differentiation": "Standard speculative decoding (Medusa, Eagle, vanilla draft models) allocates and writes KV cache entries for all draft tokens, forcing costly memory rollback and deallocation when tokens are rejected. Z-KVP eliminates 100% of discarded KV allocations.",
+    "technicalApproach": [
+      "Transient Speculative Register Layer (TSRL) residing in fast SRAM/L2 cache that holds draft token representations",
+      "Asynchronous verification mask evaluating draft tokens against target model head in a single forward pass",
+      "Atomic KV pointer commit: only verified tokens are committed to the primary PagedAttention table via hardware pointer swap",
+      "Draft model runs concurrently on secondary compute stream without blocking target model attention matrices",
+      "Adaptive draft length predictor adjusting speculative horizon from 2 to 7 tokens based on prompt predictability entropy"
+    ],
+    "currentGap": "Speculative decoding achieves 2-3x speedup on high-end GPUs, but on memory-bandwidth-constrained devices (laptops, phones), the memory bandwidth wasted writing and rolling back unverified draft KV entries degrades net throughput.",
+    "relatedWork": ["Medusa (Cai et al. 2024)", "Eagle (Li et al. 2024)", "Speculative Decoding (Leviathan et al. 2023)", "vLLM PagedAttention"],
+    "implementationPath": [
+      "Week 1-3: Implement custom Triton kernel for transient speculative register allocation",
+      "Week 4-6: Modify PagedAttention block manager to support deferred atomic pointer commits",
+      "Week 7-9: Integrate entropy-based draft length predictor into draft model scheduler",
+      "Week 10-12: Benchmark on Apple Silicon unified memory and NVIDIA RTX 4090 GPUs"
+    ],
+    "metrics": [
+      "VRAM bus bandwidth contention reduced by 65% during speculative decoding",
+      "Speculative throughput boosted from 2.1x to 3.8x on unified memory architectures",
+      "Zero memory fragmentation or garbage collection spikes during aggressive generation"
+    ],
+    "standoutPotential": "Fundamental low-level systems innovation suitable for acceptance at OSDI, ASPLOS, or MLSys."
+  },
+  {
+    "id": "context-diff-engine",
+    "title": "Context-Diff Engine (Git-for-Context)",
+    "description": "A cryptographic Directed Acyclic Graph (DAG) for multi-turn agent loops where the LLM engine ingests only semantic context diffs with virtual KV pointer stitching, achieving O(delta) prompt processing instead of O(N).",
+    "topics": ["token-saving", "context-handling"],
+    "feasibility": "High",
+    "impact": "High",
+    "differentiation": "Existing prefix caching (Anthropic, vLLM) only works if the prompt prefix is strictly linear and unchanged from token 0. In agent loops where tools inject data in the middle of history, prefix caching breaks completely. Context-Diff stitches non-contiguous KV blocks dynamically.",
+    "technicalApproach": [
+      "Content-addressed Merkle DAG where every document section, tool response, and conversation turn is hashed into discrete KV blocks",
+      "Virtual Attention Remapping table that stitches non-contiguous KV chunks in memory without physical memory copying",
+      "Delta prompt serialization protocol sending only patch payloads (insertions, deletions, replacements) to local inference runtime",
+      "Sparse position embedding recalculation using dynamic RoPE offset adjustment matrices",
+      "Automatic pruning of superseded tool responses (e.g. replacing stale web search outputs with synthesis summaries)"
+    ],
+    "currentGap": "Multi-turn autonomous agents (AutoGPT, SWE-bench solvers) repeatedly resend 10,000+ token histories just to append a 50-token tool observation, wasting 85-95% of prompt compute on redundant prefilling.",
+    "relatedWork": ["vLLM Prefix Caching", "SGLang RadixAttention", "Merkle Trees", "RoPE Rotary Positional Embeddings"],
+    "implementationPath": [
+      "Week 1-2: Design Merkle-KV hashing schema and chunk boundaries",
+      "Week 3-4: Build virtual pointer stitching module inside vLLM / llama.cpp KV cache manager",
+      "Week 5-6: Implement dynamic RoPE position remapping for non-contiguous attention segments",
+      "Week 7-8: Build agent proxy client that computes context diffs automatically",
+      "Week 9-10: Benchmark on multi-turn SWE-bench and web agent benchmarks"
+    ],
+    "metrics": [
+      "Prompt prefill latency in 20-turn agent sessions reduced by 82%",
+      "Overall token consumption billing reduced by 70% in API environments",
+      "Enables 50+ turn complex agent workflows without hitting context window bloat"
+    ],
+    "standoutPotential": "Industry-transforming architecture for all multi-step agent frameworks (LangGraph, AutoGen, Devin-style tools)."
+  },
+  {
+    "id": "homomorphic-token-perturbation",
+    "title": "Differential Privacy Token Perturbation (DP-HMT)",
+    "description": "Reversible mathematical perturbation of token embeddings in an intermediate latent representation with provable (epsilon, delta)-differential privacy bounds, enabling private cloud inference without semantic reasoning loss.",
+    "topics": ["data-leak-prevention"],
+    "feasibility": "Medium",
+    "impact": "High",
+    "differentiation": "Current PII redactors (Presidio, Private AI) either redact text with black-box tokens `<REDACTED>` or synthetic pseudonyms, destroying subtle context needed for legal and medical reasoning. DP-HMT perturbs embeddings mathematically so cloud models reason accurately while preventing token reconstruction.",
+    "technicalApproach": [
+      "Local embedding projector injecting calibrated Gaussian noise scaled to the local Lipschitz sensitivity of the vocabulary manifold",
+      "Formal (epsilon=1.2, delta=1e-5) differential privacy guarantee ensuring zero reconstructibility of raw entity names",
+      "Cloud model processes obfuscated latent embedding vectors through standard attention blocks without accessing cleartext",
+      "Client-side decryption key un-perturbs the final generated token logits locally before argmax sampling",
+      "Zero cleartext leakage over public WAN connections with mathematical proof of information-theoretic secrecy"
+    ],
+    "currentGap": "Enterprises must choose between running small, inferior local models or leaking confidential trade secrets to cloud LLM providers (OpenAI, Anthropic). No mechanism allows secure cloud reasoning over confidential inputs.",
+    "relatedWork": ["Differential Privacy (Dwork et al.)", "TextHide (Wang et al. 2020)", "Confidential Computing", "Apple Private Cloud Compute"],
+    "implementationPath": [
+      "Week 1-3: Formulate mathematical privacy bounds on transformer embedding manifolds",
+      "Week 4-6: Implement local embedding perturbation client and cloud proxy forward pass",
+      "Week 7-9: Evaluate downstream reasoning accuracy on legal and clinical NLP benchmarks",
+      "Week 10-12: Conduct empirical membership inference attack audits to validate privacy bounds"
+    ],
+    "metrics": [
+      "Zero cleartext tokens exposed to cloud infrastructure",
+      "Downstream task accuracy within 1.8% of unperturbed baseline on MMLU Clinical and Legal",
+      "Membership inference attack success rate reduced to baseline random chance (50%)"
+    ],
+    "standoutPotential": "Holy grail of AI privacy: unlocks trillion-dollar cloud LLMs for classified, defense, and healthcare applications."
+  },
+  {
+    "id": "neuromorphic-synaptic-kv-eviction",
+    "title": "Neuromorphic Synaptic KV Eviction",
+    "description": "Predictive KV cache compression algorithm inspired by biological synaptic depression that predicts token utility 50 steps into the future, achieving 90%+ KV cache compression without needle-in-a-haystack recall loss.",
+    "topics": ["token-saving", "context-handling"],
+    "feasibility": "Medium",
+    "impact": "High",
+    "differentiation": "Existing eviction methods (H2O, StreamingLLM, Scissorhands) use retrospective attention scores. When attention suddenly shifts in a reasoning chain, retrospective eviction permanently drops the critical token. Neuromorphic eviction forecasts future attention demands.",
+    "technicalApproach": [
+      "Biologically-inspired synaptic trace variable per KV token that decays exponentially but exhibits non-linear long-term potentiation",
+      "Lightweight cross-layer attention gradient monitor predicting future attention surge probabilities",
+      "Multi-resolution retention tiers: sensory buffer (last 64 tokens), episodic buffer (predictive high-utility tokens), semantic anchor tokens (system prompt & key facts)",
+      "Dynamic eviction threshold auto-tuning based on current token perplexity variance",
+      "Hardware-accelerated bitmask compaction kernel written in CUDA/Metal for instant cache defragmentation"
+    ],
+    "currentGap": "Long-context models (1M+ tokens) require tens of gigabytes of VRAM just to store the KV cache. Current KV compression methods catastrophically drop critical variables in multi-hop reasoning tasks.",
+    "relatedWork": ["H2O: Heavy-Hitter Oracle (Zhang et al. 2023)", "StreamingLLM (Xiao et al. 2023)", "Scissorhands (2023)", "SnapKV (2024)"],
+    "implementationPath": [
+      "Week 1-3: Formulate synaptic trace decay equations and simulate attention dynamics",
+      "Week 4-6: Implement custom PyTorch/C++ attention forward kernel with synaptic tracking",
+      "Week 7-9: Integrate into vLLM engine and benchmark on Needle-In-A-Haystack at 128K-1M tokens",
+      "Week 10-12: Compare against H2O and StreamingLLM on RULER and BABILong benchmark suites"
+    ],
+    "metrics": [
+      "Compresses KV cache footprint by 88-92% with <0.4% recall loss on 1M token RULER benchmark",
+      "Enables 500K context processing on a single 16GB consumer GPU",
+      "Eviction kernel execution overhead under 2% of total forward-pass time"
+    ],
+    "standoutPotential": "Breakthrough in long-context memory systems. High potential for best paper recognition at top-tier ML conferences."
+  },
+  {
+    "id": "split-brain-heterogeneous-pipeline",
+    "title": "Split-Brain NPU-CPU-GPU Pipelined Swarm",
+    "description": "Heterogeneous co-scheduling runtime that maps agent guardrails to dedicated ultra-low-power NPUs, attention matrices to unified GPU memory, and feedforward MoE experts across CPU-PCIe lanes with prefetching.",
+    "topics": ["local-agents", "token-saving"],
+    "feasibility": "Medium",
+    "impact": "High",
+    "differentiation": "Current runtimes (llama.cpp, Ollama, ONNX Runtime) execute models on either GPU or CPU, leaving modern AI PC NPUs (Snapdragon X Elite, Intel Lunar Lake 45 TOPS) completely idle during agent execution.",
+    "technicalApproach": [
+      "Tri-processor orchestration scheduler partitioning model subgraphs across NPU, GPU, and multi-core CPU",
+      "Continuous background guardrail & PII verification running 100% on the low-power 45-TOPS NPU at zero GPU wattage cost",
+      "Attention computation routed to GPU compute cores utilizing high-bandwidth unified RAM",
+      "Mixture-of-Experts (MoE) dynamic expert streaming: inactive experts staged in system RAM and prefetched over PCIe before activation",
+      "Asynchronous ring buffer interconnect synchronizing intermediate tensor activations across compute fabrics"
+    ],
+    "currentGap": "Consumer hardware features high-TOPS NPUs, but AI software has zero unified heterogeneous scheduling. Running local agents on laptops rapidly causes thermal throttling and battery exhaustion.",
+    "relatedWork": ["llama.cpp offloading", "Apple Neural Engine tools", "Qualcomm NPU SDK", "Intel OpenVINO"],
+    "implementationPath": [
+      "Week 1-3: Build NPU pipeline for continuous NeMo guardrail inference using Qualcomm/Intel NPU SDKs",
+      "Week 4-6: Implement asynchronous MoE expert prefetch engine across PCIe bus",
+      "Week 7-9: Construct unified ring buffer synchronizer between DirectML/Metal and NPU threads",
+      "Week 10-12: Full system evaluation on Snapdragon X Elite and Intel Core Ultra 200V laptops"
+    ],
+    "metrics": [
+      "Total system power consumption reduced by 48% compared to GPU-only execution",
+      "NPU utilization raised from 0% to 85% during real-time agent supervision",
+      "Zero thermal throttling over 60 minutes of continuous autonomous agent operation"
+    ],
+    "standoutPotential": "Game-changing architectural blueprint for the future of consumer AI PCs and edge robotics."
+  },
+  {
+    "id": "autonomous-local-contrastive-distillation",
+    "title": "Autonomous Local Contrastive Distillation",
+    "description": "Background continuous learning worker that captures user corrections and successful tool-call trajectories to synthesize contrastive preference pairs (DPO) and apply quantized QLoRA micro-updates during device idle/charging periods.",
+    "topics": ["local-agents", "data-leak-prevention"],
+    "feasibility": "Low",
+    "impact": "High",
+    "differentiation": "Current local LLMs are static checkpoints that never learn from user interactions. Cloud fine-tuning exposes private data. This innovation enables continuous on-device learning with zero cloud data transmission.",
+    "technicalApproach": [
+      "Trajectory recorder logging user prompt revisions, accepted code snippets, and rejected responses",
+      "Synthetic contrastive pair synthesizer generating DPO (Direct Preference Optimization) training pairs locally",
+      "Quantized 4-bit QLoRA adapter engine running on GPU/CPU only when device is plugged in and idle",
+      "Catastrophic forgetting guardrail running validation loss checks against a frozen anchor benchmark dataset",
+      "Versioned adapter hot-swapping allowing users to instantly roll back adapter updates if behavior degrades"
+    ],
+    "currentGap": "When a local assistant makes a mistake and the user corrects it, the assistant repeats the exact same mistake in the next session. No existing local framework provides safe, automated on-device continuous model improvement.",
+    "relatedWork": ["Direct Preference Optimization (Rafailov et al. 2023)", "QLoRA (Dettmers et al. 2023)", "Continual Learning in LLMs", "LoRA"],
+    "implementationPath": [
+      "Week 1-3: Build user trajectory capture daemon and automated preference pair generator",
+      "Week 4-6: Implement embedded lightweight QLoRA trainer with gradient accumulation for low VRAM",
+      "Week 7-9: Implement anchor validation gatekeeper to prevent catastrophic forgetting",
+      "Week 10-13: Conduct longitudinal user study over 30 days measuring repeat error reduction"
+    ],
+    "metrics": [
+      "Repeat error rate on user-specific domain queries drops by 76% within 5 update cycles",
+      "Training completes within 25 minutes of overnight charging on consumer hardware",
+      "Adapter storage size <25MB with zero cloud communication verified by air-gapped testing"
+    ],
+    "standoutPotential": "Transforms local AI from an ephemeral tool into an evolving, personalized cognitive partner."
+  },
+  {
+    "id": "epistemic-temporal-knowledge-graph",
+    "title": "Epistemic Temporal Knowledge Graph (Epistemic-RAG)",
+    "description": "Temporal knowledge graph with Bayesian confidence scoring and automated truth reconciliation that detects and archives contradictory facts in local agent memories, eliminating persistent hallucinations.",
+    "topics": ["context-handling", "local-agents"],
+    "feasibility": "Medium",
+    "impact": "High",
+    "differentiation": "Standard RAG and memory frameworks store conflicting facts simultaneously (e.g. 'Ajinkya is at College A' vs 'Ajinkya transferred to College B'). RAG retrieves both, causing confusing hallucinations. Epistemic-RAG arbitrates truth over time.",
+    "technicalApproach": [
+      "Temporal Knowledge Graph where every fact assertion is modeled as an edge with `[entity, relation, target, timestamp, epistemic_confidence]`",
+      "Bayesian belief update engine that calculates probability of truth based on source reliability and recency",
+      "Automated epistemic conflict detector flagging contradictory edges upon ingestion",
+      "Local arbitration protocol: uses small reasoning SLM to reconcile discrepancies, deprecate obsolete nodes, and record causal transition links",
+      "Cryptographic lineage tracking maintaining an immutable audit log of how facts evolved over time"
+    ],
+    "currentGap": "Vector databases have zero concept of time or logical negation. Ingesting updated documents creates duplicate, contradictory embeddings that perpetually confuse retrieval algorithms.",
+    "relatedWork": ["Microsoft Graph RAG (2024)", "Temporal Knowledge Graphs", "Bayesian Belief Networks", "LlamaIndex Knowledge Graph"],
+    "implementationPath": [
+      "Week 1-3: Design Epistemic Knowledge Graph schema with temporal metadata in SQLite/DuckDB",
+      "Week 4-6: Build LLM relation extractor with uncertainty estimation and timestamp extraction",
+      "Week 7-9: Implement Bayesian contradiction detection and automated edge deprecation algorithm",
+      "Week 10-12: Benchmark vs standard vector RAG on temporal multi-hop QA datasets (TempQA)"
+    ],
+    "metrics": [
+      "Eliminates 93% of contradictory factual hallucinations in multi-session question answering",
+      "Query-time graph traversal latency <35ms for 3-hop relational queries",
+      "Provides transparent, human-auditable causal explanation for why old facts were superseded"
+    ],
+    "standoutPotential": "Essential foundational infrastructure for enterprise intelligence, clinical histories, and scientific research assistants."
+  }
+]

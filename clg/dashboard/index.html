@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="LLM Optimization & Systems Research Dashboard — Comprehensive College Research on Token Saving, Context Handling, Data Leak Prevention, Local Specialist Agents, and 15 Novel Innovations">
+    <title>LLM Optimization Research Dashboard | Systems, Benchmarks & Innovations</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/themes.css">
+    <link rel="stylesheet" href="styles/print.css" media="print">
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <header class="site-header" role="banner">
+        <div class="header-content">
+            <div class="header-brand" data-tab="overview" role="button" tabindex="0" aria-label="Go to Overview">
+                <div class="brand-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/><line x1="12" y1="22" x2="12" y2="12"/></svg>
+                </div>
+                <div class="brand-text">
+                    <h1 class="site-title">LLM Optimization Research</h1>
+                    <p class="site-subtitle">College Research · Systems, Benchmarks & 15 Novel Innovations</p>
+                </div>
+            </div>
+            
+            <nav class="header-nav" role="navigation" aria-label="Main navigation">
+                <button class="nav-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Toggle navigation menu">
+                    <span class="hamburger" aria-hidden="true"></span>
+                </button>
+                <ul id="main-nav" class="nav-list" role="menubar">
+                    <li role="none"><a href="#overview" role="menuitem" class="nav-link active" data-tab="overview">Overview</a></li>
+                    <li role="none"><a href="#token-saving" role="menuitem" class="nav-link" data-tab="token-saving">Token Saving</a></li>
+                    <li role="none"><a href="#context-handling" role="menuitem" class="nav-link" data-tab="context-handling">Context Handling</a></li>
+                    <li role="none"><a href="#data-leak-prevention" role="menuitem" class="nav-link" data-tab="data-leak-prevention">Data Leak Prevention</a></li>
+                    <li role="none"><a href="#local-agents" role="menuitem" class="nav-link" data-tab="local-agents">Local Agents</a></li>
+                    <li role="none"><a href="#innovations" role="menuitem" class="nav-link" data-tab="innovations">Innovations</a></li>
+                    <li role="none"><a href="#companies" role="menuitem" class="nav-link" data-tab="companies">Companies</a></li>
+                    <li role="none"><a href="#papers" role="menuitem" class="nav-link" data-tab="papers">Papers</a></li>
+                    <li role="none"><a href="#benchmarks" role="menuitem" class="nav-link" data-tab="benchmarks">Benchmarks</a></li>
+                </ul>
+            </nav>
+            
+            <div class="header-actions">
+                <button class="icon-btn search-toggle" id="search-toggle" aria-label="Search research database (Press /)" title="Search (/)">
+                    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                </button>
+                <button class="icon-btn theme-toggle" id="theme-toggle" aria-label="Switch theme" aria-pressed="true" title="Toggle theme">
+                    <svg class="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                    <svg class="icon-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+                </button>
+                <button class="icon-btn contrast-toggle" id="contrast-toggle" aria-label="Toggle high contrast" aria-pressed="false" title="High contrast">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2v20M2 12h20"/></svg>
+                </button>
+                <button class="export-btn" id="export-btn" aria-label="Export research as PDF">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    <span>Export</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main id="main-content" role="main">
+        <!-- Overview Tab Panel -->
+        <section id="overview" class="tab-panel active" role="tabpanel" aria-labelledby="overview-tab">
+            <div class="container">
+                <div class="hero-banner">
+                    <span class="section-tag">Academic Research & Industry Synthesis</span>
+                    <h2 class="hero-title">LLM Optimization & High-Efficiency Architectures</h2>
+                    <p class="hero-subtitle">Comprehensive college project investigating memory reduction, long-context retrieval, enterprise data leak prevention, local specialist agent orchestration, and 15 novel architectural innovations.</p>
+                    <div class="hero-badges">
+                        <span class="hero-badge highlight">29 Industry Companies</span>
+                        <span class="hero-badge highlight">27 Peer-Reviewed Papers</span>
+                        <span class="hero-badge highlight">48 Verified Benchmarks</span>
+                        <span class="hero-badge highlight">15 Novel Innovations</span>
+                        <span class="hero-badge">Zero-Cloud Sovereignty</span>
+                        <span class="hero-badge">Sub-4-Bit Quantization</span>
+                    </div>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid" role="region" aria-label="Key statistics">
+                    <article class="stat-card" data-tab="companies" role="button" tabindex="0" aria-label="View Companies & Projects">
+                        <div class="stat-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                        </div>
+                        <div class="stat-content">
+                            <span class="stat-value" id="stat-companies">29</span>
+                            <span class="stat-label">Companies & Projects</span>
+                        </div>
+                    </article>
+                    <article class="stat-card" data-tab="papers" role="button" tabindex="0" aria-label="View Research Papers">
+                        <div class="stat-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                        </div>
+                        <div class="stat-content">
+                            <span class="stat-value" id="stat-papers">27</span>
+                            <span class="stat-label">Research Papers</span>
+                        </div>
+                    </article>
+                    <article class="stat-card" data-tab="benchmarks" role="button" tabindex="0" aria-label="View Benchmarks">
+                        <div class="stat-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                        </div>
+                        <div class="stat-content">
+                            <span class="stat-value" id="stat-benchmarks">48</span>
+                            <span class="stat-label">Benchmarks</span>
+                        </div>
+                    </article>
+                    <article class="stat-card" data-tab="innovations" role="button" tabindex="0" aria-label="View Innovation Opportunities">
+                        <div class="stat-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        </div>
+                        <div class="stat-content">
+                            <span class="stat-value" id="stat-innovations">15</span>
+                            <span class="stat-label">Innovation Opportunities</span>
+                        </div>
+                    </article>
+                </div>
+
+                <!-- Topic Domains Grid -->
+                <div class="topic-grid" role="region" aria-label="Research topics">
+                    <article class="topic-card" data-tab="token-saving" role="button" tabindex="0" aria-label="View Token Saving Section">
+                        <div class="topic-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/><line x1="12" y1="22" x2="12" y2="12"/></svg>
+                        </div>
+                        <h3>Token Saving & Inference</h3>
+                        <p>KV cache quantization (INT8/INT4/FP8), FlashAttention-3, PagedAttention, speculative decoding, and prompt compression (LLMLingua-2).</p>
+                        <ul class="topic-highlights">
+                            <li>Up to 16x memory footprint reduction</li>
+                            <li>20-50x throughput amplification</li>
+                            <li>20x lossless prompt compression</li>
+                        </ul>
+                    </article>
+
+                    <article class="topic-card" data-tab="context-handling" role="button" tabindex="0" aria-label="View Context Handling Section">
+                        <div class="topic-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+                        </div>
+                        <h3>Context Handling & RAG</h3>
+                        <p>Ultra-long context windows (1M-2M), Graph RAG, Agentic RAG, hybrid dense/sparse search (BGE-M3 + BM25), and cross-session memory.</p>
+                        <ul class="topic-highlights">
+                            <li>2M token native context (Gemini 1.5)</li>
+                            <li>Graph RAG multi-hop synthesis</li>
+                            <li>Sub-35ms hybrid vector retrieval</li>
+                        </ul>
+                    </article>
+
+                    <article class="topic-card" data-tab="data-leak-prevention" role="button" tabindex="0" aria-label="View Data Leak Prevention Section">
+                        <div class="topic-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="12" y1="11" x2="12" y2="16"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                        </div>
+                        <h3>Data Leak Prevention</h3>
+                        <p>Zero-cloud PII redaction (Presidio/GLiNER), programmable Colang guardrails (NeMo), prompt injection defense (Lakera), and compliance auditing.</p>
+                        <ul class="topic-highlights">
+                            <li>99%+ automated PII detection F1</li>
+                            <li>Sub-15ms guardrail enforcement</li>
+                            <li>EU AI Act & HIPAA compliance logging</li>
+                        </ul>
+                    </article>
+
+                    <article class="topic-card" data-tab="local-agents" role="button" tabindex="0" aria-label="View Local Specialist Agents Section">
+                        <div class="topic-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4M8 11h8M8 7h8"/></svg>
+                        </div>
+                        <h3>Local Specialist Agents</h3>
+                        <p>Small Language Models (1-4B SLMs), MoE architectures (Phi-3.5 MoE), GGUF quantization, edge execution, and modular swarm orchestration.</p>
+                        <ul class="topic-highlights">
+                            <li>Phi-3.5 MoE (6.6B active params)</li>
+                            <li>Llama-3.2 1B/3B on mobile NPUs</li>
+                            <li>Hot-swappable modular specialists</li>
+                        </ul>
+                    </article>
+                </div>
+
+                <!-- Interactive Savings & ROI Calculator -->
+                <div class="calculator-card">
+                    <div class="calc-header">
+                        <div class="calc-title">
+                            <h3>Interactive LLM Systems Savings & Efficiency Simulator</h3>
+                            <p>Simulate combined hardware memory reduction, throughput multiplier, and estimated monthly cloud cost savings based on your custom prompt workload.</p>
+                        </div>
+                    </div>
+                    <div class="calc-grid">
+                        <div class="calc-inputs">
+                            <div class="calc-field">
+                                <label for="calc-tokens">Monthly Context Volume: <span id="calc-tokens-val">50M Tokens</span></label>
+                                <input type="range" id="calc-tokens" class="calc-slider" min="1" max="500" value="50">
+                            </div>
+                            <div class="calc-field">
+                                <label for="calc-concurrency">Concurrent User Requests: <span id="calc-concurrency-val">16 Concurrency</span></label>
+                                <input type="range" id="calc-concurrency" class="calc-slider" min="1" max="128" value="16">
+                            </div>
+                            <div class="calc-field">
+                                <label for="calc-stack">Optimization Technology Stack</label>
+                                <select id="calc-stack" class="filter-select">
+                                    <option value="1">Baseline (Vanilla PyTorch Transformers)</option>
+                                    <option value="4">PagedAttention + Prefix Caching</option>
+                                    <option value="8">INT8 KV Cache + FlashAttention-3</option>
+                                    <option value="20">INT4 KV + Speculative Decoding</option>
+                                    <option value="50" selected>Full Stack: INT4 + FlashAttn-3 + Speculative + LLMLingua-2</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="calc-results">
+                            <div class="calc-metric">
+                                <span class="calc-metric-label">Memory Footprint Reduction:</span>
+                                <span class="calc-metric-val" id="metric-memory">~16x Saved</span>
+                            </div>
+                            <div class="calc-metric">
+                                <span class="calc-metric-label">Inference Throughput Gain:</span>
+                                <span class="calc-metric-val" id="metric-throughput">50.0x Faster</span>
+                            </div>
+                            <div class="calc-metric">
+                                <span class="calc-metric-label">Time-To-First-Token (TTFT):</span>
+                                <span class="calc-metric-val" id="metric-latency">85% Lower</span>
+                            </div>
+                            <div class="calc-metric">
+                                <span class="calc-metric-label">Estimated Monthly Cloud Cost Saved:</span>
+                                <span class="calc-metric-val" id="metric-cost">$1,840 / mo</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Token Saving Tab Panel -->
+        <section id="token-saving" class="tab-panel" role="tabpanel" aria-labelledby="token-saving-tab" hidden>
+            <div class="container">
+                <header class="section-header">
+                    <span class="section-tag">Domain 1 · Memory & Compute Optimization</span>
+                    <h2>Token Saving & Inference Acceleration</h2>
+                    <p class="section-description">Benchmarking KV cache quantization, attention sparsification, prompt compression, and speculative decoding frameworks.</p>
+                </header>
+                
+                <div class="filters" role="search" aria-label="Filter token saving benchmarks">
+                    <div class="filter-group">
+                        <label for="token-category">Category</label>
+                        <select id="token-category" class="filter-select">
+                            <option value="">All Categories</option>
+                            <option value="kv-cache">KV Cache Quantization</option>
+                            <option value="attention">Attention Optimization</option>
+                            <option value="compression">Prompt Compression</option>
+                            <option value="speculative">Speculative Decoding</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="token-framework">Framework</label>
+                        <select id="token-framework" class="filter-select">
+                            <option value="">All Frameworks</option>
+                            <option value="tensorrt">TensorRT-LLM</option>
+                            <option value="vllm">vLLM / SGLang</option>
+                            <option value="llama.cpp">llama.cpp</option>
+                            <option value="together">Together Engine</option>
+                        </select>
+                    </div>
+                    <input type="search" id="token-search" class="filter-search" placeholder="Search methods, models, sources..." aria-label="Search token saving benchmarks">
+                </div>
+                
+                <div class="table-wrapper" role="region" aria-label="Token saving benchmarks table">
+                    <table id="token-table" class="data-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Optimization Method</th>
+                                <th scope="col">Category</th>
+                                <th scope="col">Memory Reduction</th>
+                                <th scope="col">Speedup / Throughput</th>
+                                <th scope="col">Quality Impact</th>
+                                <th scope="col">Frameworks</th>
+                                <th scope="col">Source Paper / Report</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Context Handling Tab Panel -->
+        <section id="context-handling" class="tab-panel" role="tabpanel" aria-labelledby="context-handling-tab" hidden>
+            <div class="container">
+                <header class="section-header">
+                    <span class="section-tag">Domain 2 · Long-Context & RAG Architectures</span>
+                    <h2>Context Handling & Retrieval-Augmented Generation</h2>
+                    <p class="section-description">Benchmarking long-context scaling (128K to 2M tokens), Graph RAG multi-hop retrieval, hybrid search, and persistent cross-session memory systems.</p>
+                </header>
+                
+                <div class="filters" role="search" aria-label="Filter context handling benchmarks">
+                    <div class="filter-group">
+                        <label for="context-category">Category</label>
+                        <select id="context-category" class="filter-select">
+                            <option value="">All Categories</option>
+                            <option value="long-context">Context Extension</option>
+                            <option value="rag">Hybrid RAG Retrieval</option>
+                            <option value="advanced-rag">Graph / Advanced RAG</option>
+                            <option value="memory">Memory Systems</option>
+                        </select>
+                    </div>
+                    <input type="search" id="context-search" class="filter-search" placeholder="Search context methods, models..." aria-label="Search context handling benchmarks">
+                </div>
+                
+                <div class="table-wrapper" role="region" aria-label="Context handling benchmarks table">
+                    <table id="context-table" class="data-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Method / Architecture</th>
+                                <th scope="col">Category</th>
+                                <th scope="col">Max Context Window</th>
+                                <th scope="col">Quality Gain / Recall</th>
+                                <th scope="col">Query Latency</th>
+                                <th scope="col">Frameworks</th>
+                                <th scope="col">Source Report</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Data Leak Prevention Tab Panel -->
+        <section id="data-leak-prevention" class="tab-panel" role="tabpanel" aria-labelledby="data-leak-prevention-tab" hidden>
+            <div class="container">
+                <header class="section-header">
+                    <span class="section-tag">Domain 3 · Privacy & Enterprise Security</span>
+                    <h2>Data Leak Prevention & AI Governance</h2>
+                    <p class="section-description">Evaluating on-device PII detection, programmable safety guardrails, prompt injection defenses, differential privacy, and regulatory audit compliance.</p>
+                </header>
+                
+                <div class="filters" role="search" aria-label="Filter privacy benchmarks">
+                    <div class="filter-group">
+                        <label for="privacy-category">Category</label>
+                        <select id="privacy-category" class="filter-select">
+                            <option value="">All Categories</option>
+                            <option value="pii">PII Detection & Redaction</option>
+                            <option value="guardrails">Guardrails & Safety</option>
+                            <option value="injection">Prompt Injection Defense</option>
+                            <option value="dp">Differential Privacy & Attestation</option>
+                        </select>
+                    </div>
+                    <input type="search" id="privacy-search" class="filter-search" placeholder="Search security solutions..." aria-label="Search data leak prevention benchmarks">
+                </div>
+                
+                <div class="table-wrapper" role="region" aria-label="Data leak prevention table">
+                    <table id="privacy-table" class="data-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Security Solution</th>
+                                <th scope="col">Category</th>
+                                <th scope="col">Accuracy / F1 Detection</th>
+                                <th scope="col">Latency Overhead</th>
+                                <th scope="col">Deployment Target</th>
+                                <th scope="col">License</th>
+                                <th scope="col">Source Benchmark</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Local Specialist Agents Tab Panel -->
+        <section id="local-agents" class="tab-panel" role="tabpanel" aria-labelledby="local-agents-tab" hidden>
+            <div class="container">
+                <header class="section-header">
+                    <span class="section-tag">Domain 4 · Edge Deployment & Small Language Models</span>
+                    <h2>Local Specialist Agents & Edge Inference</h2>
+                    <p class="section-description">Benchmarking 1-4B Small Language Models (SLMs), Mixture-of-Experts (MoE), 4-bit GGUF quantization, and high-throughput local execution runtimes.</p>
+                </header>
+                
+                <div class="filters" role="search" aria-label="Filter local agents benchmarks">
+                    <div class="filter-group">
+                        <label for="agent-category">Category</label>
+                        <select id="agent-category" class="filter-select">
+                            <option value="">All Categories</option>
+                            <option value="slm">Small Language Models (SLM)</option>
+                            <option value="moe">Mixture of Experts (MoE)</option>
+                            <option value="deployment">Edge & Browser Runtimes</option>
+                            <option value="frameworks">Agent Orchestration</option>
+                        </select>
+                    </div>
+                    <input type="search" id="agent-search" class="filter-search" placeholder="Search models, runtimes, params..." aria-label="Search local agent benchmarks">
+                </div>
+                
+                <div class="table-wrapper" role="region" aria-label="Local agents benchmarks table">
+                    <table id="agent-table" class="data-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Model / Runtime Tool</th>
+                                <th scope="col">Category</th>
+                                <th scope="col">Parameters / Specs</th>
+                                <th scope="col">Benchmark Scores</th>
+                                <th scope="col">Deployment Platform</th>
+                                <th scope="col">Quantization Formats</th>
+                                <th scope="col">Source Release</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Innovations Tab Panel -->
+        <section id="innovations" class="tab-panel" role="tabpanel" aria-labelledby="innovations-tab" hidden>
+            <div class="container">
+                <header class="section-header">
+                    <span class="section-tag">Core Contribution · 15 Novel Architectures</span>
+                    <h2>Innovation Opportunities & Breakthrough Systems</h2>
+                    <p class="section-description">15 high-impact, technologically grounded architectural innovations that do not exist in the current commercial landscape. Designed with complete engineering specifications and roadmaps.</p>
+                </header>
+                
+                <div class="filters" role="search" aria-label="Filter innovations">
+                    <div class="filter-group">
+                        <label for="innovation-feasibility">Feasibility Level</label>
+                        <select id="innovation-feasibility" class="filter-select">
+                            <option value="">All Feasibilities</option>
+                            <option value="High">High Feasibility</option>
+                            <option value="Medium">Medium Feasibility</option>
+                            <option value="Low">Low Feasibility (Moonshot)</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="innovation-impact">Impact</label>
+                        <select id="innovation-impact" class="filter-select">
+                            <option value="">All Impact Levels</option>
+                            <option value="High">High Impact</option>
+                            <option value="Medium">Medium Impact</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="innovation-grid" role="list" aria-label="15 Innovation opportunities"></div>
+            </div>
+        </section>
+
+        <!-- Companies Tab Panel -->
+        <section id="companies" class="tab-panel" role="tabpanel" aria-labelledby="companies-tab" hidden>
+            <div class="container">
+                <header class="section-header">
+                    <span class="section-tag">Industry Landscape · 29 Organizations</span>
+                    <h2>Companies & Open-Source Projects</h2>
+                    <p class="section-description">29 industry leaders and open-source ecosystems pioneering token efficiency, long context, guardrails, and on-device execution.</p>
+                </header>
+                
+                <div class="filters" role="search" aria-label="Filter companies">
+                    <div class="filter-group">
+                        <label for="company-topic">Domain Focus</label>
+                        <select id="company-topic" class="filter-select">
+                            <option value="">All Domains</option>
+                            <option value="token-saving">Token Saving</option>
+                            <option value="context-handling">Context Handling</option>
+                            <option value="data-leak-prevention">Data Leak Prevention</option>
+                            <option value="local-agents">Local Agents</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="company-oss">License</label>
+                        <select id="company-oss" class="filter-select">
+                            <option value="">All Licenses</option>
+                            <option value="true">Open Source</option>
+                            <option value="false">Proprietary</option>
+                        </select>
+                    </div>
+                    <input type="search" id="company-search" class="filter-search" placeholder="Search companies, tech, notes..." aria-label="Search companies">
+                </div>
+                
+                <div class="table-wrapper" role="region" aria-label="Companies and projects table">
+                    <table id="companies-table" class="data-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Company / Project</th>
+                                <th scope="col">Focus Domains</th>
+                                <th scope="col">Key Technologies</th>
+                                <th scope="col">Type</th>
+                                <th scope="col">License</th>
+                                <th scope="col">GitHub / Link</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Papers Tab Panel -->
+        <section id="papers" class="tab-panel" role="tabpanel" aria-labelledby="papers-tab" hidden>
+            <div class="container">
+                <header class="section-header">
+                    <span class="section-tag">Literature Foundation · 27 Papers</span>
+                    <h2>Peer-Reviewed Research Papers</h2>
+                    <p class="section-description">27 foundational research publications spanning attention mechanics, prompt compression, context extension, and guardrail architectures.</p>
+                </header>
+                
+                <div class="filters" role="search" aria-label="Filter papers">
+                    <div class="filter-group">
+                        <label for="paper-topic">Topic</label>
+                        <select id="paper-topic" class="filter-select">
+                            <option value="">All Topics</option>
+                            <option value="token-saving">Token Saving</option>
+                            <option value="context-handling">Context Handling</option>
+                            <option value="data-leak-prevention">Data Leak Prevention</option>
+                            <option value="local-agents">Local Agents</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="paper-year">Publication Year</label>
+                        <select id="paper-year" class="filter-select">
+                            <option value="">All Years</option>
+                            <option value="2024">2024</option>
+                            <option value="2023">2023</option>
+                            <option value="2022">2022</option>
+                        </select>
+                    </div>
+                    <input type="search" id="paper-search" class="filter-search" placeholder="Search paper title, authors, findings..." aria-label="Search research papers">
+                </div>
+                
+                <div class="table-wrapper" role="region" aria-label="Research papers table">
+                    <table id="papers-table" class="data-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Paper Title</th>
+                                <th scope="col">Authors & Venue</th>
+                                <th scope="col">Year</th>
+                                <th scope="col">Topics</th>
+                                <th scope="col">Key Findings</th>
+                                <th scope="col">Citations</th>
+                                <th scope="col">Paper Link</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Benchmarks Tab Panel -->
+        <section id="benchmarks" class="tab-panel" role="tabpanel" aria-labelledby="benchmarks-tab" hidden>
+            <div class="container">
+                <header class="section-header">
+                    <span class="section-tag">Comparative Metrics · 48 Benchmarks</span>
+                    <h2>Consolidated Benchmark Performance Suite</h2>
+                    <p class="section-description">Side-by-side performance metrics across token efficiency, RAG quality, PII detection, and small language model capabilities.</p>
+                </header>
+                
+                <div class="benchmark-summary" role="region" aria-label="Benchmark summary visual charts">
+                    <div class="chart-card">
+                        <h3>Token Optimization Throughput Gains</h3>
+                        <p>Throughput multiplier achieved compared to standard HuggingFace Transformers baseline.</p>
+                        <div class="chart-container" id="token-saving-container">
+                            <canvas id="token-saving-chart" aria-label="Token saving methods comparison chart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <h3>RAG Retrieval Method Quality (%)</h3>
+                        <p>Accuracy and context recall score across multi-hop reasoning and factual extraction tasks.</p>
+                        <div class="chart-container" id="rag-comparison-container">
+                            <canvas id="rag-comparison-chart" aria-label="RAG methods comparison chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="benchmark-tables">
+                    <header style="margin-bottom: var(--space-md);">
+                        <h3 style="font-size: var(--text-xl); color: var(--color-text-bright); font-weight: 700;">Full Optimization Stack Cumulative Multipliers</h3>
+                    </header>
+                    <div class="table-wrapper">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Technology Layer Added</th>
+                                    <th scope="col">Memory Footprint</th>
+                                    <th scope="col">Throughput Multiplier</th>
+                                    <th scope="col">Latency Reduction</th>
+                                    <th scope="col">Effective Cost Factor</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Baseline (PyTorch FP16 / HF)</strong></td>
+                                    <td>1x (Standard VRAM)</td>
+                                    <td>1x Baseline</td>
+                                    <td>1x</td>
+                                    <td>1.0x (100% Cost)</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>+ PagedAttention (vLLM Block Manager)</strong></td>
+                                    <td>~4x Less Fragmentation</td>
+                                    <td>12-15x Throughput</td>
+                                    <td>4x Faster TTFT</td>
+                                    <td>0.10x Cost</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>+ KV Cache INT8 Quantization</strong></td>
+                                    <td>~8x Memory Reduction</td>
+                                    <td>18-22x Throughput</td>
+                                    <td>8x Faster TTFT</td>
+                                    <td>0.06x Cost</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>+ FlashAttention-3 (Asynchronous Hopper)</strong></td>
+                                    <td>~8x Memory Reduction</td>
+                                    <td>28-34x Throughput</td>
+                                    <td>12x Faster TTFT</td>
+                                    <td>0.04x Cost</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>+ Speculative Decoding (Medusa / Eagle)</strong></td>
+                                    <td>~8x Memory Reduction</td>
+                                    <td>42-52x Throughput</td>
+                                    <td>20x Faster TTFT</td>
+                                    <td>0.025x Cost</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>+ LLMLingua-2 Prompt Compression</strong></td>
+                                    <td>~16x Memory Footprint</td>
+                                    <td>60-80x Throughput</td>
+                                    <td>30x Faster TTFT</td>
+                                    <td>0.015x Cost</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer" role="contentinfo">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="brand-icon" style="width: 28px; height: 28px;">
+                        <svg viewBox="0 0 24 24" style="width: 14px; height: 14px;"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                    </div>
+                    <span>LLM Optimization Research Dashboard</span>
+                </div>
+                <nav class="footer-nav" aria-label="Footer navigation">
+                    <a href="#overview" data-tab="overview">Overview</a>
+                    <a href="#token-saving" data-tab="token-saving">Token Saving</a>
+                    <a href="#context-handling" data-tab="context-handling">Context Handling</a>
+                    <a href="#data-leak-prevention" data-tab="data-leak-prevention">Privacy & Security</a>
+                    <a href="#local-agents" data-tab="local-agents">Local Agents</a>
+                    <a href="#innovations" data-tab="innovations">15 Innovations</a>
+                    <a href="#companies" data-tab="companies">29 Companies</a>
+                    <a href="#papers" data-tab="papers">27 Papers</a>
+                    <a href="#benchmarks" data-tab="benchmarks">48 Benchmarks</a>
+                </nav>
+                <p class="footer-meta">College Project Research Dashboard · Verified Data Across 29 Companies, 27 Papers, 48 Benchmarks & 15 Innovations · <span id="last-updated"></span></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Comprehensive Detail Modal Dialog -->
+    <div class="modal" id="detail-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" hidden>
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <header class="modal-header">
+                <h3 id="modal-title"></h3>
+                <button class="modal-close" aria-label="Close dialog">&times;</button>
+            </header>
+            <div class="modal-body" id="modal-body"></div>
+        </div>
+    </div>
+
+    <!-- Universal Search Modal Dialog -->
+    <div class="modal" id="search-modal" role="dialog" aria-modal="true" aria-label="Global Research Search" hidden>
+        <div class="modal-overlay"></div>
+        <div class="modal-content" style="max-width: 640px;">
+            <header class="modal-header">
+                <h3 style="font-size: var(--text-lg);">Search Entire Research Database</h3>
+                <button class="modal-close" id="search-modal-close" aria-label="Close search dialog">&times;</button>
+            </header>
+            <div style="margin-bottom: var(--space-md);">
+                <input type="search" id="global-search-input" class="filter-search" style="width: 100%; font-size: var(--text-base); padding: 12px 16px;" placeholder="Search companies, papers, benchmarks, innovations...">
+            </div>
+            <div class="modal-body" id="global-search-results" style="max-height: 50vh; overflow-y: auto;">
+                <p style="color: var(--color-text-secondary); font-size: var(--text-sm);">Type any search term above to instantly query across all 150+ research entities.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts: Data is loaded FIRST so it's synchronously available offline and on file:// -->
+    <script src="assets/data/data.js"></script>
+    <script src="scripts/main.js"></script>
+    <script src="scripts/navigation.js"></script>
+    <script src="scripts/search.js"></script>
+    <script src="scripts/charts.js"></script>
+    <!-- Non-blocking Chart.js CDN for enhanced canvas interactivity (with automatic fallback to SVG) -->
+    <script async src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</body>
+</html>

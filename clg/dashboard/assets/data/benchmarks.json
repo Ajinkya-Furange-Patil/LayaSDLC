@@ -1,0 +1,636 @@
+{
+  "tokenSaving": [
+    {
+      "id": "kv-cache-quant",
+      "category": "KV Cache Quantization",
+      "method": "INT8 Quantization",
+      "memoryReduction": "2x",
+      "qualityLoss": "< 0.5% perplexity",
+      "models": [
+        "LLaMA 3.1",
+        "Mistral",
+        "Phi-3.5"
+      ],
+      "frameworks": [
+        "TensorRT-LLM",
+        "vLLM",
+        "llama.cpp"
+      ],
+      "source": "NVIDIA TensorRT-LLM benchmarks"
+    },
+    {
+      "id": "kv-cache-int4",
+      "category": "KV Cache Quantization",
+      "method": "INT4 Quantization",
+      "memoryReduction": "4x",
+      "qualityLoss": "< 1% perplexity",
+      "models": [
+        "Nemotron 3 Ultra",
+        "LLaMA 3.1"
+      ],
+      "frameworks": [
+        "TensorRT-LLM",
+        "llama.cpp (Q4_K)"
+      ],
+      "source": "NVIDIA NeMo benchmarks"
+    },
+    {
+      "id": "kv-cache-fp8",
+      "category": "KV Cache Quantization",
+      "method": "FP8 Quantization",
+      "memoryReduction": "2x",
+      "qualityLoss": "Negligible",
+      "models": [
+        "H100/H200 native"
+      ],
+      "frameworks": [
+        "TensorRT-LLM",
+        "Together Engine",
+        "vLLM"
+      ],
+      "source": "Together AI blog"
+    },
+    {
+      "id": "flashattention3",
+      "category": "Attention Optimization",
+      "method": "FlashAttention-3 (Hopper)",
+      "speedup": "2-3x vs FlashAttention-2",
+      "memoryReduction": "1.5-2x",
+      "models": [
+        "All attention-based LLMs"
+      ],
+      "frameworks": [
+        "Together Engine",
+        "vLLM",
+        "TensorRT-LLM",
+        "PyTorch 2.5+"
+      ],
+      "source": "FlashAttention-3 paper (Dao et al. 2024)"
+    },
+    {
+      "id": "llmlingua2",
+      "category": "Prompt Compression",
+      "method": "LLMLingua-2",
+      "compressionRatio": "20x",
+      "qualityLoss": "< 2%",
+      "latencyReduction": "5-10x",
+      "models": [
+        "Any LLM (compressor is small)"
+      ],
+      "frameworks": [
+        "Milvus",
+        "LangChain",
+        "LlamaIndex",
+        "Custom"
+      ],
+      "source": "LLMLingua-2 paper (Jiang et al. 2024)"
+    },
+    {
+      "id": "longllmlingua",
+      "category": "Long Context Compression",
+      "method": "LongLLMLingua",
+      "compressionRatio": "6-10x",
+      "qualityLoss": "Improves accuracy on long context",
+      "contextWindow": "100K+ tokens",
+      "models": [
+        "Any LLM"
+      ],
+      "frameworks": [
+        "Milvus",
+        "Custom"
+      ],
+      "source": "LongLLMLingua paper (Jiang et al. 2024)"
+    },
+    {
+      "id": "speculative-decoding-medusa",
+      "category": "Speculative Decoding",
+      "method": "Medusa (Multi-head Draft)",
+      "speedup": "2-2.5x",
+      "qualityLoss": "None (exact verification)",
+      "models": [
+        "LLaMA, Vicuna, Mistral"
+      ],
+      "frameworks": [
+        "vLLM",
+        "SGLang",
+        "TensorRT-LLM",
+        "llama.cpp"
+      ],
+      "source": "Medusa paper (Cai et al. 2024)"
+    },
+    {
+      "id": "speculative-decoding-eagle",
+      "category": "Speculative Decoding",
+      "method": "Eagle (Feature Retrieval Draft)",
+      "speedup": "2.5-3x",
+      "qualityLoss": "None",
+      "models": [
+        "LLaMA, Mistral, Qwen"
+      ],
+      "frameworks": [
+        "vLLM",
+        "SGLang",
+        "Together Engine"
+      ],
+      "source": "Eagle paper (Li et al. 2024)"
+    },
+    {
+      "id": "sliding-window-attention",
+      "category": "Attention Optimization",
+      "method": "Sliding Window Attention (SWA)",
+      "speedup": "2x for long context",
+      "memoryReduction": "50% KV cache",
+      "contextWindow": "128K (effective)",
+      "models": [
+        "Mistral 7B",
+        "Mixtral",
+        "Mistral Nemo"
+      ],
+      "frameworks": [
+        "Mistral.rs",
+        "vLLM",
+        "TensorRT-LLM"
+      ],
+      "source": "Mistral 7B paper"
+    },
+    {
+      "id": "grouped-query-attention",
+      "category": "Attention Optimization",
+      "method": "Grouped Query Attention (GQA)",
+      "speedup": "1.5-2x",
+      "memoryReduction": "2-4x KV cache",
+      "models": [
+        "LLaMA 3.1",
+        "Mistral",
+        "Gemma 2",
+        "Phi-3.5"
+      ],
+      "frameworks": [
+        "All major frameworks"
+      ],
+      "source": "GQA paper (Ainslie et al. 2023)"
+    },
+    {
+      "id": "pagedattention",
+      "category": "KV Cache Management",
+      "method": "PagedAttention (vLLM)",
+      "memoryEfficiency": "Near-optimal (4-8% waste)",
+      "throughputIncrease": "20-30x vs HF Transformers",
+      "features": [
+        "Chunked prefill",
+        "Prefix caching",
+        "Speculative decoding"
+      ],
+      "frameworks": [
+        "vLLM",
+        "SGLang",
+        "TensorRT-LLM"
+      ],
+      "source": "vLLM paper (Kwon et al. 2023)"
+    },
+    {
+      "id": "prefix-caching",
+      "category": "KV Cache Optimization",
+      "method": "Automatic Prefix Caching",
+      "cacheHitRate": "30-70% (workload dependent)",
+      "speedup": "2-10x for cached prefixes",
+      "models": [
+        "All"
+      ],
+      "frameworks": [
+        "vLLM",
+        "SGLang",
+        "TensorRT-LLM",
+        "Anthropic API"
+      ],
+      "source": "vLLM/SGLang benchmarks"
+    },
+    {
+      "id": "bitnet-b158",
+      "category": "1-bit Quantization",
+      "method": "BitNet b1.58 Ternary Weights {-1, 0, 1}",
+      "memoryReduction": "7.1x vs FP16",
+      "speedup": "3.5x throughput gain",
+      "qualityLoss": "Matches FP16 baseline at 3B scale",
+      "models": [
+        "BitNet 2B/3B",
+        "Llama3-1B Ternary"
+      ],
+      "frameworks": [
+        "bitnet.cpp",
+        "llama.cpp",
+        "PyTorch"
+      ],
+      "source": "Microsoft Research BitNet paper (Wang et al. 2024)"
+    }
+  ],
+  "contextHandling": [
+    {
+      "id": "longrope-2m",
+      "category": "Context Extension",
+      "method": "LongRoPE / YaRN",
+      "contextWindow": "2M tokens",
+      "fineTuningTokens": "1K-10K steps",
+      "shortContextPreserved": "Yes",
+      "models": [
+        "LLaMA 3.1",
+        "Phi-3.5",
+        "Mistral",
+        "Qwen2"
+      ],
+      "source": "LongRoPE paper (Ding et al. 2024)"
+    },
+    {
+      "id": "gemini-1m-2m",
+      "category": "Native Long Context",
+      "method": "Mixture-of-Experts + RoPE Scaling",
+      "contextWindow": "1M (2M preview)",
+      "needleInHaystack": "99%+ at 1M tokens",
+      "costOptimization": "Context caching (75% reduction)",
+      "models": [
+        "Gemini 1.5 Pro/Flash"
+      ],
+      "source": "Gemini 1.5 Technical Report"
+    },
+    {
+      "id": "hybrid-search",
+      "category": "RAG Retrieval",
+      "method": "Dense + Sparse (BM25) Hybrid",
+      "recallImprovement": "15-30% over dense-only",
+      "latency": "< 50ms p99",
+      "frameworks": [
+        "Weaviate",
+        "Pinecone",
+        "Milvus",
+        "Elastic"
+      ],
+      "source": "Weaviate/Pinecone benchmarks"
+    },
+    {
+      "id": "rerank-cohere",
+      "category": "RAG Reranking",
+      "method": "Cohere Rerank 3.5",
+      "latency": "< 100ms for 100 docs",
+      "qualityGain": "10-20% nDCG improvement",
+      "multilingual": "100+ languages",
+      "source": "Cohere Rerank 3.5 benchmarks"
+    },
+    {
+      "id": "graph-rag",
+      "category": "Advanced RAG",
+      "method": "Graph RAG (Microsoft/LlamaIndex)",
+      "qualityGain": "20-40% on complex multi-hop",
+      "useCase": "Global queries, thematic analysis",
+      "frameworks": [
+        "LlamaIndex",
+        "Weaviate",
+        "LangChain"
+      ],
+      "source": "Graph RAG paper (Edge et al. 2024)"
+    },
+    {
+      "id": "agentic-rag",
+      "category": "Advanced RAG",
+      "method": "Agentic RAG (LangGraph)",
+      "qualityGain": "Handles complex reasoning",
+      "steps": "3-10 retrieval/planning steps",
+      "frameworks": [
+        "LangGraph",
+        "LlamaIndex",
+        "AutoGen"
+      ],
+      "source": "LangChain blog / LangGraph docs"
+    },
+    {
+      "id": "voyage-embeddings",
+      "category": "Embeddings",
+      "method": "Voyage-3-Large",
+      "dimensions": "1024 (Matryoshka: truncatable to 256)",
+      "beirScore": "SOTA on BEIR benchmark",
+      "quantization": "Binary (32x smaller, <3% loss)",
+      "source": "Voyage AI benchmarks"
+    },
+    {
+      "id": "zep-memory",
+      "category": "Long-term Memory",
+      "method": "Temporal Knowledge Graph",
+      "retention": "Unlimited (cross-session)",
+      "queryLatency": "< 100ms",
+      "frameworks": [
+        "LangChain",
+        "LangGraph",
+        "Custom"
+      ],
+      "source": "Zep documentation"
+    },
+    {
+      "id": "bge-m3-hybrid",
+      "category": "Multi-Vector Hybrid RAG",
+      "method": "BGE-M3 (Dense + Sparse + ColBERT Multi-Granularity)",
+      "contextWindow": "8,192 tokens",
+      "qualityGain": "+18.4% Recall@10 over single-vector",
+      "latency": "< 35ms per query",
+      "frameworks": [
+        "Milvus",
+        "Qdrant",
+        "Ollama",
+        "FastEmbed"
+      ],
+      "source": "BAAI BGE-M3 Technical Report (Chen et al. 2024)"
+    },
+    {
+      "id": "lancedb-zero-copy",
+      "category": "Disk-First Vector Search",
+      "method": "LanceDB Zero-Copy Disk Vector Index",
+      "contextWindow": "Scales to 100M+ vectors on disk",
+      "qualityGain": "Exact and IVF-PQ 99.2% recall",
+      "latency": "< 12ms p99 disk seek",
+      "frameworks": [
+        "LanceDB",
+        "Apache Arrow",
+        "Python",
+        "Rust"
+      ],
+      "source": "LanceDB Benchmarks (2024)"
+    },
+    {
+      "id": "zep-temporal-memory-graph",
+      "category": "Long-Term Memory Graph",
+      "method": "Zep Temporal Memory with Episodic Decay",
+      "contextWindow": "Multi-session unlimited",
+      "qualityGain": "+24% conversational coherence over 30 sessions",
+      "latency": "< 45ms retrieval",
+      "frameworks": [
+        "Zep CE",
+        "Docker",
+        "PostgreSQL / pgvector"
+      ],
+      "source": "Zep AI Memory Benchmarks (2024)"
+    }
+  ],
+  "dataLeakPrevention": [
+    {
+      "id": "presidio-pii",
+      "category": "PII Detection",
+      "method": "Presidio Analyzer",
+      "entityTypes": "50+ built-in",
+      "languages": "20+",
+      "f1Score": "95%+ on standard benchmarks",
+      "latency": "< 50ms/doc",
+      "deployment": "Python, Docker, Azure",
+      "source": "Microsoft Presidio docs"
+    },
+    {
+      "id": "private-ai-pii",
+      "category": "PII Detection",
+      "method": "PrivateGPT",
+      "entityTypes": "50+",
+      "languages": "52",
+      "f1Score": "99%+",
+      "latency": "< 50ms/doc",
+      "deployment": "On-prem (Docker/K8s)",
+      "compliance": "GDPR, HIPAA, PCI",
+      "source": "Private AI benchmarks"
+    },
+    {
+      "id": "lakera-injection",
+      "category": "Prompt Injection Defense",
+      "method": "Lakera Guard",
+      "detectionRate": "95%+ on Gandalf",
+      "falsePositiveRate": "< 1%",
+      "latency": "< 20ms",
+      "deployment": "API, Self-hosted",
+      "source": "Lakera benchmarks"
+    },
+    {
+      "id": "nemo-guardrails",
+      "category": "Programmable Guardrails",
+      "method": "NeMo Guardrails (Colang)",
+      "latencyOverhead": "< 10ms per rail",
+      "railTypes": "Input, Output, Dialog, Retrieval, Execution",
+      "integration": "LangChain, LlamaIndex, Custom",
+      "source": "NeMo Guardrails paper"
+    },
+    {
+      "id": "guardrails-ai",
+      "category": "Output Validation",
+      "method": "Guardrails AI Validators",
+      "validators": "100+ in Hub",
+      "piiTypes": "50+",
+      "streamingSupport": "Token-level",
+      "integration": "Pydantic, LangChain, Custom",
+      "source": "Guardrails AI Hub"
+    },
+    {
+      "id": "llamaguard3",
+      "category": "Safety Classification",
+      "method": "Llama Guard 3",
+      "categories": "14 safety categories",
+      "modelSizes": "1B, 3B, 8B",
+      "deployment": "Local (llama.cpp, Ollama, TGI)",
+      "license": "Llama Community License",
+      "source": "Meta Llama Guard 3 release"
+    },
+    {
+      "id": "differential-privacy",
+      "category": "Training Privacy",
+      "method": "DP-SGD / PATE",
+      "privacyBudget": "Configurable (ε, δ)",
+      "utilityLoss": "2-10% depending on ε",
+      "frameworks": [
+        "Opacus (PyTorch)",
+        "TensorFlow Privacy",
+        "JAX Privacy"
+      ],
+      "source": "Differential Privacy literature"
+    },
+    {
+      "id": "gliner-zero-shot-pii",
+      "category": "Zero-Shot PII Redaction",
+      "method": "GLiNER Zero-Shot Entity Redaction",
+      "accuracy": "94.8% F1 across unseen enterprise PII types",
+      "latency": "< 22ms per chunk on CPU",
+      "deployment": "Local (ONNX / PyTorch), Browser (WASM)",
+      "license": "Apache 2.0",
+      "source": "GLiNER paper (Zaratiana et al. 2024)"
+    },
+    {
+      "id": "apple-pcc-attestation",
+      "category": "Cryptographic Cloud Privacy",
+      "method": "Apple Private Cloud Compute Attestation",
+      "accuracy": "100% verifiable non-retention & transparency",
+      "latency": "< 18ms attestation overhead",
+      "deployment": "Apple Silicon Secure Enclave & Custom PCC OS",
+      "license": "Proprietary with Public Security Research Audits",
+      "source": "Apple Security Engineering (2024)"
+    },
+    {
+      "id": "azure-prompt-shield",
+      "category": "Prompt Injection Defense",
+      "method": "Azure AI Prompt Shield Classifier",
+      "accuracy": "97.4% detection on direct and indirect jailbreaks",
+      "latency": "< 25ms p95 latency",
+      "deployment": "Cloud API, Edge Gateway container",
+      "license": "Commercial",
+      "source": "Microsoft Security Benchmarks (2024)"
+    },
+    {
+      "id": "protectai-guardian",
+      "category": "Model & Artifact Security",
+      "method": "Protect AI Guardian Deserialization Scanner",
+      "accuracy": "99.2% malicious tensor and pickle intercept rate",
+      "latency": "< 15ms per package",
+      "deployment": "Local CLI, CI/CD pipeline, Docker",
+      "license": "Apache 2.0",
+      "source": "Protect AI Vulnerability Database (2024)"
+    }
+  ],
+  "localAgents": [
+    {
+      "id": "phi35-moe",
+      "category": "Small MoE Model",
+      "model": "Phi-3.5 MoE",
+      "totalParams": "42B",
+      "activeParams": "6.6B",
+      "contextWindow": "128K",
+      "benchmarks": "Beats 7B-8B dense models",
+      "deployment": "ONNX Runtime, llama.cpp, Ollama",
+      "quantization": "GGUF Q4_K_M, Q8_0",
+      "source": "Microsoft Phi-3.5 release"
+    },
+    {
+      "id": "gemma2-2b",
+      "category": "Tiny SLM",
+      "model": "Gemma 2 2B",
+      "params": "2B",
+      "contextWindow": "8K",
+      "benchmarks": "Strong for size, tool use support",
+      "deployment": "Mobile (MediaPipe), Browser (Transformers.js), Ollama",
+      "quantization": "GGUF, TensorFlow Lite, ONNX",
+      "source": "Google Gemma 2 release"
+    },
+    {
+      "id": "llama32-1b-3b",
+      "category": "Edge Models",
+      "model": "LLaMA 3.2 1B/3B",
+      "params": "1B / 3B",
+      "contextWindow": "128K",
+      "benchmarks": "Best-in-class for parameter count",
+      "deployment": "Mobile NPU, llama.cpp, Ollama, MLC-LLM",
+      "quantization": "GGUF (Q4_K_M recommended)",
+      "source": "Meta LLaMA 3.2 release"
+    },
+    {
+      "id": "nemotron-mini",
+      "category": "Agent-Optimized Small Model",
+      "model": "Nemotron-Mini 4B",
+      "params": "4B",
+      "contextWindow": "128K",
+      "benchmarks": "Optimized for function calling",
+      "deployment": "Jetson Orin, TensorRT-LLM, ONNX",
+      "quantization": "FP8, INT4",
+      "source": "NVIDIA Nemotron release"
+    },
+    {
+      "id": "smollm",
+      "category": "Tiny High-Quality Model",
+      "model": "SmolLM 1.7B",
+      "params": "1.7B",
+      "contextWindow": "8K",
+      "benchmarks": "Beats 7B models on many tasks",
+      "deployment": "Browser (Transformers.js), Mobile, Ollama",
+      "quantization": "GGUF, ONNX, Safetensors",
+      "source": "Hugging Face SmolLM release"
+    },
+    {
+      "id": "openelm",
+      "category": "Apple Silicon Optimized",
+      "model": "OpenELM 3B",
+      "params": "3B",
+      "contextWindow": "8K",
+      "benchmarks": "Optimized for Neural Engine",
+      "deployment": "Core ML, iOS/macOS native",
+      "quantization": "Core ML quantization",
+      "source": "Apple OpenELM release"
+    },
+    {
+      "id": "ollama-performance",
+      "category": "Local Inference Framework",
+      "tool": "Ollama",
+      "modelsSupported": "100+",
+      "apiCompatibility": "OpenAI-compatible",
+      "gpuSupport": "CUDA, Metal, ROCm, Vulkan",
+      "cpuInference": "Optimized via llama.cpp",
+      "source": "Ollama benchmarks"
+    },
+    {
+      "id": "mlc-llm-browser",
+      "category": "Browser Inference",
+      "tool": "MLC-LLM / Transformers.js",
+      "backend": "WebGPU (WASM fallback)",
+      "modelsSupported": "LLaMA, Gemma, Phi, Qwen, SmolLM",
+      "quantization": "INT4, INT8",
+      "offlineCapable": "Yes (after model download)",
+      "source": "MLC-LLM / Transformers.js benchmarks"
+    },
+    {
+      "id": "vllm-throughput",
+      "category": "High-Throughput Serving",
+      "tool": "vLLM / SGLang",
+      "throughput": "20-30x HF Transformers",
+      "features": [
+        "PagedAttention",
+        "Prefix caching",
+        "Speculative decoding",
+        "Structured output"
+      ],
+      "deployment": "Docker, Kubernetes, Single GPU/Node",
+      "source": "vLLM/SGLang benchmarks"
+    },
+    {
+      "id": "agno-framework",
+      "category": "Local-First Agent Framework",
+      "tool": "Agno",
+      "llmSupport": "Ollama, llama.cpp, OpenAI, Anthropic, etc.",
+      "features": [
+        "Type-safe",
+        "Memory",
+        "Knowledge",
+        "Tools",
+        "Multi-agent teams"
+      ],
+      "ui": "Built-in playground",
+      "source": "Agno documentation"
+    },
+    {
+      "id": "mistral-nemo-12b",
+      "category": "Compact Powerhouse",
+      "model": "Mistral NeMo 12B",
+      "params": "12B params, Tekken 131K vocab",
+      "benchmarks": "MMLU 68.4%, GSM8K 78.5%, beats LLaMA 3 8B",
+      "deployment": "Ollama, llama.cpp, vLLM, TensorRT-LLM",
+      "quantization": "GGUF Q4_K_M (7.2GB VRAM)",
+      "source": "Mistral AI & NVIDIA (2024)"
+    },
+    {
+      "id": "deepseek-coder-v2-lite",
+      "category": "Coding Specialist MoE",
+      "model": "DeepSeek-Coder-V2 Lite 16B (2.4B active)",
+      "params": "16B total, 2.4B active MoE",
+      "benchmarks": "HumanEval 81.1%, MultiPL-E 74.3%",
+      "deployment": "Ollama, llama.cpp, SGLang, vLLM",
+      "quantization": "GGUF Q4_K_M (9.4GB VRAM)",
+      "source": "DeepSeek-AI Technical Report (2024)"
+    },
+    {
+      "id": "qwen25-coder-7b",
+      "category": "Code & Reasoning Specialist",
+      "model": "Qwen 2.5 Coder 7B",
+      "params": "7.6B params, 128K context",
+      "benchmarks": "HumanEval 88.4% (beats GPT-4o mini), EvalPlus 83.5%",
+      "deployment": "Ollama, llama.cpp, vLLM, MLC-LLM",
+      "quantization": "GGUF Q4_K_M (4.7GB VRAM)",
+      "source": "Alibaba Qwen Team (2024)"
+    }
+  ]
+}

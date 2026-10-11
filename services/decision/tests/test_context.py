@@ -23,6 +23,7 @@ from layasdlc.context import (
     from_git_diff,
     from_symbol_search,
     from_test_failures,
+    from_python_ast,
     measure_tokens,
     rank_items,
 )
@@ -127,6 +128,76 @@ def test_from_symbol_search_returns_empty_for_missing(tmp_path):
     (tmp_path / "app.py").write_text("x = 1")
     items = from_symbol_search(str(tmp_path), ["nonexistent_symbol"])
     assert items == []
+
+
+# ======================================================================================
+# Python AST extraction
+# ======================================================================================
+
+
+def test_from_python_ast_finds_function_definitions(tmp_path):
+    (tmp_path / "app.py").write_text(
+        "def calculate_total(items):\n"
+        "    return sum(items)\n"
+        "\n"
+        "def other():\n"
+        "    pass\n"
+    )
+    items = from_python_ast(str(tmp_path), ["calculate_total"])
+    assert items
+    assert any("def calculate_total" in item.content for item in items)
+    assert all("def other" not in item.content for item in items)
+
+
+def test_from_python_ast_finds_class_definitions(tmp_path):
+    (tmp_path / "app.py").write_text(
+        "class OrderService:\n"
+        "    def process(self):\n"
+        "        pass\n"
+    )
+    items = from_python_ast(str(tmp_path), ["OrderService"])
+    assert items
+    assert any("class OrderService" in item.content for item in items)
+
+
+def test_from_python_ast_includes_body_when_requested(tmp_path):
+    (tmp_path / "app.py").write_text(
+        "def foo():\n"
+        "    x = 1\n"
+        "    return x\n"
+    )
+    items = from_python_ast(str(tmp_path), ["foo"], include_body=True)
+    assert items
+    assert any("x = 1" in item.content for item in items)
+
+
+def test_from_python_ast_excludes_body_by_default(tmp_path):
+    (tmp_path / "app.py").write_text(
+        "def foo():\n"
+        "    x = 1\n"
+        "    return x\n"
+    )
+    items = from_python_ast(str(tmp_path), ["foo"], include_body=False)
+    assert items
+    assert all("x = 1" not in item.content for item in items)
+    assert any("def foo" in item.content for item in items)
+
+
+def test_from_python_ast_handles_syntax_errors(tmp_path):
+    (tmp_path / "bad.py").write_text("def broken(:\n")
+    (tmp_path / "good.py").write_text("def fine():\n    pass\n")
+    items = from_python_ast(str(tmp_path), ["fine"])
+    assert items  # good.py is still parsed
+
+
+def test_from_python_ast_finds_module_constants(tmp_path):
+    (tmp_path / "config.py").write_text(
+        "MAX_RETRIES = 3\n"
+        "OTHER = 99\n"
+    )
+    items = from_python_ast(str(tmp_path), ["MAX_RETRIES"])
+    assert items
+    assert any("MAX_RETRIES" in item.content for item in items)
 
 
 # ======================================================================================

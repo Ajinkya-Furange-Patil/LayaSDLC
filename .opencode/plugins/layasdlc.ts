@@ -1,32 +1,43 @@
 /**
- * LayaSDLC event-logging plugin for OpenCode (Stage 5, item 5.10).
+ * LayaSDLC plugin for OpenCode (Stage 5, item 5.10).
  *
- * Logs every LayaSDLC tool invocation through the OpenCode logging API so
- * workflow transitions and model usage are auditable in the session log.
+ * Subscribes to tool execution events and logs them through the OpenCode
+ * logging API so workflow transitions are auditable in the session log.
  *
- * The plugin registers no tools of its own -- the tools live in
+ * The plugin registers no tools of its own — the tools live in
  * `.opencode/tools/layasdlc.ts`. This file only subscribes to events.
  */
 
-export const LayaSDLCPlugin = async ({ client }: any) => {
-  return {
-    event: async ({ event }: any) => {
-      const type: string = event?.type ?? ""
-      // Only log tool execution events to keep the session log focused.
-      if (type !== "tool.execute.after") return
-      try {
-        await client.app.log({
-          body: {
-            service: "layasdlc",
-            level: "info",
-            message: `OpenCode tool executed: ${type}`,
-          },
-        })
-      } catch {
-        // Logging must never break a tool call.
-      }
-    },
-  }
-}
+import { Plugin } from "@opencode/plugin"
 
-export default LayaSDLCPlugin
+export default Plugin.define({
+  id: "layasdlc",
+
+  async setup(ctx) {
+    const controller = new AbortController()
+
+    void (async () => {
+      try {
+        for await (const event of ctx.event.subscribe({ signal: controller.signal })) {
+          if (event.type !== "tool.execute.after") continue
+          try {
+            await ctx.client.app.log({
+              body: {
+                service: "layasdlc",
+                level: "info",
+                message: `OpenCode tool executed: ${event.type}`,
+              },
+            })
+          } catch {
+            // Logging must never break a tool call.
+          }
+        }
+      } catch {
+        // Subscription ended (plugin unload); nothing to clean up.
+      }
+    })()
+
+    // Cleanup: abort the event subscription when the plugin unloads.
+    return () => controller.abort()
+  },
+})

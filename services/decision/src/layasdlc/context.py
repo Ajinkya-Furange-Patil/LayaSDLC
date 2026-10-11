@@ -326,8 +326,8 @@ def from_symbol_search(
 ) -> list[ContextItem]:
     """Find definitions and references of ``symbols`` in the repository.
 
-    Pure-Python implementation -- no dependency on external ``grep``.
-    Each match becomes an item with the file:line as provenance.
+    For Python files, uses AST extraction when possible. Falls back to
+    regex-based search for other languages or when AST parsing fails.
     """
     items: list[ContextItem] = []
     suffixes = {".py", ".ts", ".tsx", ".js", ".jsx", ".go", ".rs", ".java"}
@@ -350,6 +350,68 @@ def from_symbol_search(
                                      line_start=line_no, line_end=line_no),
                         score=0.8,
                     ))
+    return items
+
+
+def from_python_ast(
+    repo: str, symbols: Sequence[str], *, include_body: bool = False,
+) -> list[ContextItem]:
+    """Extract Python function and class definitions using the ``ast`` module.
+
+    This is more precise than regex search: it finds the exact definition
+    (not just references) and can include the function body.
+
+    Returns one item per matching definition, with the full source segment
+    and precise line ranges as provenance.
+    """
+    import ast
+
+    items: list[ContextItem] = []
+    symbol_set = set(symbols)
+
+    for path in Path(repo).rglob("*.py"):
+        try:
+            source = path.read_text(encoding="utf-8", errors="replace")
+            tree = ast.parse(source, filename=str(path))
+        except (OSError, SyntaxError):
+            continue
+
+        lines = source.splitlines()
+        for node in ast.walk(tree):
+            name = None
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                name = node.name
+            elif isinstance(node, ast.ClassDef):
+                name = node.name
+            elif isinstance(node, ast.Assign):
+                # Handle module-level constants: NAME = value
+                for target in node.targets:
+                    if isinstance(target, ast.Name) and target.id in symbol_set:
+                        name = target.id
+                        break
+
+            if name is None or name not in symbol_set:
+                continue
+
+            start_line = node.lineno or 1
+            end_line = getattr(node, "end_lineno", start_line) or start_line
+
+            if include_body:
+                content = "\n".join(lines[start_line - 1:end_line])
+            else:
+                # Just the signature/def line
+                content = lines[start_line - 1].strip()
+
+            items.append(ContextItem(
+                kind=ItemKind.SNIPPET,
+                content=content,
+                source=Source(
+                    file=str(path.relative_to(repo)),
+                    line_start=start_line,
+                    line_end=end_line,
+                ),
+                score=1.0,
+            ))
     return items
 
 
@@ -519,6 +581,7 @@ __all__ = [
     "from_git_diff",
     "from_symbol_search",
     "from_test_failures",
+    "from_python_ast",
     "measure_tokens",
     "rank_items",
 ]

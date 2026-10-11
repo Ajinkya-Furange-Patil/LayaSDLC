@@ -199,6 +199,19 @@ def measure_tokens(text: str, tokenizer: Optional[Any] = None) -> tuple[int, boo
     return estimate_tokens(text), False
 
 
+def load_tiktoken(model: str = "cl100k_base") -> Optional[Any]:
+    """Try to load a tiktoken encoder for accurate token counting.
+
+    Returns ``None`` when tiktoken is not installed, so the caller falls back
+    to the character heuristic rather than failing.
+    """
+    try:
+        import tiktoken
+        return tiktoken.get_encoding(model)
+    except Exception:
+        return None
+
+
 # ======================================================================================
 # Retrieval
 # ======================================================================================
@@ -569,6 +582,75 @@ def deduplicate(items: Sequence[ContextItem]) -> list[ContextItem]:
     return [seen[fp] for fp in order]
 
 
+def microcompact(items: Sequence[ContextItem]) -> list[ContextItem]:
+    """Deduplicate repeated tool results.
+
+    When the same tool output appears multiple times (e.g. the same file read
+    twice), keep only the first occurrence. This is distinct from
+    :func:`deduplicate`, which keys on exact content hash; microcompact keys
+    on ``(kind, source.file, source.line_start)`` so that overlapping reads of
+    the same file region collapse.
+    """
+    seen: set[tuple] = set()
+    result: list[ContextItem] = []
+    for item in items:
+        key = (item.kind, item.source.file, item.source.line_start)
+        if key in seen:
+            continue
+        seen.add(key)
+        result.append(item)
+    return result
+
+
+def compact_context(
+    items: Sequence[ContextItem], *, max_tokens: int,
+    tokenizer: Optional[Any] = None,
+) -> tuple[list[ContextItem], int]:
+    """Compact context by summarizing low-scoring items rather than dropping them.
+
+    Items below the median score are replaced with a one-line summary of their
+    source, preserving provenance while reducing token count. Returns the
+    compacted items and how many were summarized.
+    """
+    if not items:
+        return [], 0
+
+    costs = [(item, measure_tokens(item.content, tokenizer)[0]) for item in items]
+    total = sum(cost for _, cost in costs)
+    if total <= max_tokens:
+        return list(items), 0
+
+    # Sort by score ascending; summarize the lowest-scoring items first.
+    sorted_items = sorted(costs, key=lambda pair: pair[0].score)
+    summarized = 0
+    result: list[ContextItem] = []
+    running = 0
+
+    for item, cost in sorted_items:
+        if running + cost <= max_tokens:
+            result.append(item)
+            running += cost
+        else:
+            # Replace with a compact reference.
+            summary = ContextItem(
+                kind=item.kind,
+                content=f"[{item.source.describe()} — {cost} tokens, summarized]",
+                source=item.source,
+                score=item.score,
+            )
+            summary_cost = measure_tokens(summary.content, tokenizer)[0]
+            if running + summary_cost <= max_tokens:
+                result.append(summary)
+                running += summary_cost
+                summarized += 1
+            # else: drop entirely (only discretionary items reach here)
+
+    # Restore original order.
+    order = {id(item): index for index, item in enumerate(items)}
+    result.sort(key=lambda item: order.get(id(item), 0))
+    return result, summarized
+
+
 __all__ = [
     "ContextItem",
     "ContextPackage",
@@ -584,4 +666,7 @@ __all__ = [
     "from_python_ast",
     "measure_tokens",
     "rank_items",
+    "load_tiktoken",
+    "microcompact",
+    "compact_context",
 ]

@@ -17,6 +17,7 @@ from layasdlc.context import (
     ItemKind,
     Source,
     build_package,
+    compact_context,
     deduplicate,
     estimate_tokens,
     from_filename_search,
@@ -24,7 +25,9 @@ from layasdlc.context import (
     from_symbol_search,
     from_test_failures,
     from_python_ast,
+    load_tiktoken,
     measure_tokens,
+    microcompact,
     rank_items,
 )
 
@@ -198,6 +201,83 @@ def test_from_python_ast_finds_module_constants(tmp_path):
     items = from_python_ast(str(tmp_path), ["MAX_RETRIES"])
     assert items
     assert any("MAX_RETRIES" in item.content for item in items)
+
+
+# ======================================================================================
+# Microcompact
+# ======================================================================================
+
+
+def test_microcompact_deduplicates_overlapping_reads():
+    items = [
+        ContextItem(kind=ItemKind.SNIPPET, content="line 1",
+                    source=Source(file="a.py", line_start=1)),
+        ContextItem(kind=ItemKind.SNIPPET, content="line 1 again",
+                    source=Source(file="a.py", line_start=1)),
+        ContextItem(kind=ItemKind.SNIPPET, content="line 2",
+                    source=Source(file="a.py", line_start=2)),
+    ]
+    result = microcompact(items)
+    assert len(result) == 2
+
+
+def test_microcompact_keeps_distinct_sources():
+    items = [
+        ContextItem(kind=ItemKind.SNIPPET, content="x",
+                    source=Source(file="a.py", line_start=1)),
+        ContextItem(kind=ItemKind.SNIPPET, content="y",
+                    source=Source(file="b.py", line_start=1)),
+    ]
+    result = microcompact(items)
+    assert len(result) == 2
+
+
+# ======================================================================================
+# Auto-compaction
+# ======================================================================================
+
+
+def test_compact_context_returns_unchanged_when_under_budget():
+    items = [
+        ContextItem(kind=ItemKind.SNIPPET, content="short",
+                    source=Source(file="a.py")),
+    ]
+    result, summarized = compact_context(items, max_tokens=1000)
+    assert summarized == 0
+    assert len(result) == 1
+
+
+def test_compact_context_summarizes_low_scoring_items():
+    items = [
+        ContextItem(kind=ItemKind.SNIPPET, content="x" * 400,
+                    source=Source(file="big.py"), score=0.1),
+        ContextItem(kind=ItemKind.CONSTRAINT, content="must",
+                    source=Source(file="constraints.md"), score=0.9),
+    ]
+    result, summarized = compact_context(items, max_tokens=50)
+    assert summarized >= 1
+    assert any(item.kind is ItemKind.CONSTRAINT for item in result)
+
+
+# ======================================================================================
+# Token counting with tiktoken
+# ======================================================================================
+
+
+def test_load_tiktoken_returns_none_when_not_installed():
+    result = load_tiktoken()
+    if result is not None:
+        assert len(result.encode("hello")) > 0
+
+
+def test_measure_tokens_with_fake_tokenizer():
+    class FakeTokenizer:
+        def encode(self, text):
+            return list(range(len(text.split())))
+
+    count, measured = measure_tokens("one two three", tokenizer=FakeTokenizer())
+    assert count == 3
+    assert measured is True
 
 
 # ======================================================================================

@@ -55,6 +55,8 @@ from .engines import (
     score_state,
 )
 from .errors import (
+    CodingError,
+    ExecutionError,
     ApprovalRequiredError,
     DecisionRejected,
     DecisionServiceError,
@@ -82,6 +84,9 @@ from .policy import GateVerdict, PolicyConfig, evaluate_gate, guard_success_clai
 from .questions import INSTRUCTIONS, OPTION_DESCRIPTIONS, question_for
 from .safety import SafetyFinding, classify_safety
 from .validation import resolve_allowed_options, validate_answer, validate_envelope
+from .coding import CodingAdapter, CodingResult, CodingError, FakeCodingAdapter, LocalCodingAdapter
+from .coding import CodingAdapter, CodingResult, CodingError, FakeCodingAdapter, LocalCodingAdapter
+from .execution import CheckResult, ExecutionEngine, ExecutionResult
 from .context import (
     ContextItem,
     ContextPackage,

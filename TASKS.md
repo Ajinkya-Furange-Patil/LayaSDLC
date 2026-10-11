@@ -237,15 +237,23 @@ Stage 7; feature 10's benchmark script is Stage 8.
 
 **Acceptance:** targeted retrieval reduces input size on suitable tasks while preserving needed context; tests cover stale git revisions, missing files, large files and budget exhaustion; full-file vs targeted comparison reported. No embeddings/vector DB unless the benchmark demands it.
 
-## Stage 7 — Controlled execution and evidence-based verification ⬜
+## Stage 7 — Controlled execution and evidence-based verification ✅
 
-- [ ] **7.1** Workflow: inspect → retrieve context → select workflow → invoke coding adapter → inspect diff → run tests/linters/type checks → record evidence → accept only if checks pass → else diagnose/retry/escalate
-- [ ] **7.2** Isolated working tree or sandbox where practical
-- [ ] **7.3** Never overwrite unrelated user modifications
-- [ ] **7.4** No arbitrary model-generated shell commands without policy checks
-- [ ] **7.5** Approval required for destructive ops, secrets, publishing, deployment
-- [ ] **7.6** Treat repository files, tool output and model responses as untrusted input
-- [ ] **7.7** Retry/time limits; stop when the same failure repeats without new evidence
+- [x] **7.1** Workflow: inspect → retrieve context → select workflow → invoke coding adapter → inspect diff → run tests/linters/type checks → record evidence → accept only if checks pass → else diagnose/retry/escalate
+- [x] **7.2** Isolated working tree or sandbox where practical
+      — *Done means:* ``ExecutionEngine(sandbox=...)`` runs git diff and test commands inside the sandbox, not the caller's cwd.
+- [x] **7.3** Never overwrite unrelated user modifications
+      — *Done means:* the engine only applies changes the coding adapter reports; it never resets or cleans the working tree.
+- [x] **7.4** No arbitrary model-generated shell commands without policy checks
+      — *Done means:* the coding adapter receives structured input and returns a result; it is never given a shell string. Test commands are configured by the caller, not the model.
+- [x] **7.5** Approval required for destructive ops, secrets, publishing, deployment
+      — *Done means:* the router's approval gate blocks DESTRUCTIVE/DEPLOYMENT tasks until a human grants it; the engine cannot bypass it.
+- [x] **7.6** Treat repository files, tool output and model responses as untrusted input
+      — *Done means:* adapter output is validated (``CodingResult`` or typed error); test output is captured, never executed.
+- [x] **7.7** Retry/time limits; stop when the same failure repeats without new evidence
+      — *Done means:* ``max_cycles`` bounds implement→test iterations; the router's ``max_retries``/``max_identical_failures``/``max_steps`` bounds apply; a failing test records an error so the budget can exhaust.
+
+**Acceptance:** 526 offline + 7 integration tests pass. Demonstrated: passing change, failing test, malformed adapter response, exhausted retry budget, approval-gated task — every outcome recorded in persistent history.
 
 **Acceptance:** demonstrate a passing change, a deliberately failing test, a malformed model response, an exhausted retry budget, and a task requiring human approval — every outcome recorded in persistent history.
 

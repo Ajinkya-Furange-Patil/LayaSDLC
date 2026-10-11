@@ -191,6 +191,26 @@ class IncompleteTask(WorkflowError):
 # --- Stage 1 feature 7 / 8 --------------------------------------------------------------
 
 
+# --- Stage 7: execution ------------------------------------------------------------------
+
+
+class CodingError(DecisionServiceError):
+    """The coding adapter failed: a model call raised, timed out, or returned
+    something unusable.
+
+    Distinct from ``EngineFailure`` (which is about the *decision* engine) so
+    a caller can tell which adapter broke without parsing messages.
+    """
+
+    reason = "coding_error"
+
+
+class ExecutionError(DecisionServiceError):
+    """The execution engine could not complete a step."""
+
+    reason = "execution_error"
+
+
 class UnverifiedClaimError(DecisionServiceError):
     """Raised when something claims success without passing test evidence."""
 
